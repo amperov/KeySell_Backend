@@ -1,0 +1,8 @@
+db:
+  host: localhost
+  port: 5432
+  user: unflat
+  password: 123
+  name: sell
+app:
+  port: 8080

@@ -53,7 +53,7 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request, p
 		log.Println(err)
 		return
 	}
-
+	w.Write([]byte(fmt.Sprintf(`{"status": "product %d updated"}`, id)))
 }
 
 func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
@@ -98,6 +98,7 @@ func (h *ProductHandler) CreateOne(w http.ResponseWriter, r *http.Request, param
 		log.Println(err)
 		return
 	}
+	w.Write([]byte(fmt.Sprintf(`{"status": "product %d created"}`, id)))
 }
 
 func (h *ProductHandler) CreateMany(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
@@ -108,7 +109,10 @@ func (h *ProductHandler) CreateMany(w http.ResponseWriter, r *http.Request, para
 
 	CatID, SubCatID := tooling.GetTwoIDs(params)
 
-	tooling.GetFromBody(r.Body, input)
+	err := tooling.GetFromBody(r.Body, input)
+	if err != nil {
+		return
+	}
 
 	Products := strings.Split(input.Content, "\n")
 

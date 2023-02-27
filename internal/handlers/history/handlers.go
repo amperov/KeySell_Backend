@@ -2,13 +2,13 @@ package history
 
 import (
 	"KeySell/pkg/auth"
+	"KeySell/pkg/tooling"
 	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
-	"strconv"
 )
 
 type HistoryService interface {
@@ -64,18 +64,7 @@ func (h *HistoryHandler) GetHistory(w http.ResponseWriter, r *http.Request, _ ht
 func (h *HistoryHandler) GetFullTransaction(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	UserID := r.Context().Value("user_id").(int)
 
-	if UserID == 0 {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
-	tran_id := params.ByName("tran_id")
-	tranID, err := strconv.Atoi(tran_id)
-	if err != nil {
-		w.WriteHeader(400)
-		w.Write([]byte(fmt.Sprintf(`"error": "%v"`, err)))
-		return
-	}
+	tranID := tooling.GetTranID(params)
 
 	transaction, err := h.hs.GetOneTransaction(r.Context(), UserID, tranID)
 	if err != nil {

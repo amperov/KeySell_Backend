@@ -1,13 +1,17 @@
 package category
 
-import "context"
+import (
+	"context"
+	"errors"
+)
 
 type CategoryStorage interface {
 	Create(ctx context.Context, m map[string]interface{}) (int, error)
-	Update(ctx context.Context, m map[string]interface{}, UserID int, CatID int) (int, error)
-	Delete(ctx context.Context, UserID int, CatID int) error
+	Update(ctx context.Context, m map[string]interface{}, CatID int) (int, error)
+	Delete(ctx context.Context, CatID int) error
 	GetOne(ctx context.Context, CatID int) (map[string]interface{}, error)
 	GetAll(ctx context.Context, UserID int) ([]map[string]interface{}, error)
+	Belong(ctx context.Context, UserID, CategoryID int) bool
 }
 
 type SubcategoryStorage interface {
@@ -25,19 +29,38 @@ type CategoryService struct {
 	ProdStore   ProductStorage
 }
 
+func NewCategoryService(catStore CategoryStorage, subCatStore SubcategoryStorage, prodStore ProductStorage) *CategoryService {
+	return &CategoryService{CatStore: catStore, SubCatStore: subCatStore, ProdStore: prodStore}
+}
+
 func (c *CategoryService) Create(ctx context.Context, m map[string]interface{}) (int, error) {
+
 	return c.CatStore.Create(ctx, m)
 }
 
 func (c *CategoryService) Update(ctx context.Context, m map[string]interface{}, UserID int, CatID int) (int, error) {
-	return c.CatStore.Update(ctx, m, UserID, CatID)
+	belong := c.CatStore.Belong(ctx, UserID, CatID)
+	if belong == false {
+		return 0, errors.New("you dont have permissions")
+	}
+
+	return c.CatStore.Update(ctx, m, CatID)
 }
 
 func (c *CategoryService) Delete(ctx context.Context, UserID int, CatID int) error {
-	return c.CatStore.Delete(ctx, UserID, CatID)
+	belong := c.CatStore.Belong(ctx, UserID, CatID)
+	if belong == false {
+		return errors.New("you dont have permissions")
+	}
+	return c.CatStore.Delete(ctx, CatID)
 }
 
 func (c *CategoryService) GetOne(ctx context.Context, UserID int, CatID int) (map[string]interface{}, error) {
+	belong := c.CatStore.Belong(ctx, UserID, CatID)
+	if belong == false {
+		return nil, errors.New("you dont have permissions")
+	}
+
 	Category, err := c.CatStore.GetOne(ctx, CatID)
 	if err != nil {
 		return nil, err
@@ -68,7 +91,7 @@ func (c *CategoryService) GetAll(ctx context.Context, UserID int) ([]map[string]
 	for _, m := range all {
 		count, err := c.SubCatStore.GetCount(ctx, m["id"].(int))
 		if err != nil {
-			return nil, err
+			count = 0
 		}
 		m["count_subcategories"] = count
 	}

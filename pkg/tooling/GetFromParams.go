@@ -44,3 +44,11 @@ func GetAllIDs(params httprouter.Params) (int, int, int) {
 	ProdID := GetProductID(params)
 	return CatID, SubCatID, ProdID
 }
+func GetTranID(params httprouter.Params) int {
+	tranID := params.ByName("tran_id")
+	TranID, err := strconv.Atoi(tranID)
+	if err != nil {
+		return 0
+	}
+	return TranID
+}

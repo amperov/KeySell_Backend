@@ -2,10 +2,11 @@ package tooling
 
 import (
 	"encoding/json"
+	"github.com/sirupsen/logrus"
 	"io"
 )
 
-func GetFromBody(closer io.ReadCloser, any2 any) error {
+func GetFromBody(closer io.ReadCloser, any2 interface{}) error {
 	body, err := io.ReadAll(closer)
 	if err != nil {
 		return err
@@ -14,5 +15,6 @@ func GetFromBody(closer io.ReadCloser, any2 any) error {
 	if err != nil {
 		return err
 	}
+	logrus.Printf("From Get Body: %v", any2)
 	return nil
 }

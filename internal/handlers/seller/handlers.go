@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
 )
@@ -40,12 +41,14 @@ func (s *SellerHandler) CreateUser(w http.ResponseWriter, r *http.Request, _ htt
 	w.Header().Add("Content-Type", "application/json")
 	var input SignUpInput
 
-	err := tooling.GetFromBody(r.Body, input)
+	err := tooling.GetFromBody(r.Body, &input)
 	if err != nil {
 		return
 	}
 
+	logrus.Println(input)
 	id, err := s.s.SignUp(r.Context(), input.ToMap())
+
 	if err != nil {
 		w.Write([]byte(fmt.Sprintf(`"error": "%v"`, err)))
 		w.WriteHeader(http.StatusInternalServerError)
@@ -67,7 +70,7 @@ func (s *SellerHandler) AuthUser(w http.ResponseWriter, r *http.Request, _ httpr
 	w.Header().Add("Content-Type", "application/json")
 	var input SignInInput
 
-	err := tooling.GetFromBody(r.Body, input)
+	err := tooling.GetFromBody(r.Body, &input)
 	if err != nil {
 		return
 	}
@@ -88,7 +91,7 @@ func (s *SellerHandler) UpdateData(w http.ResponseWriter, r *http.Request, _ htt
 	var upd UpdateInput
 	UserID := r.Context().Value("user_id").(int)
 
-	err := tooling.GetFromBody(r.Body, upd)
+	err := tooling.GetFromBody(r.Body, &upd)
 	if err != nil {
 		return
 	}
