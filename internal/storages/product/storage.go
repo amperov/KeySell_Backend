@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/sirupsen/logrus"
 	"log"
 )
 
@@ -63,7 +64,7 @@ func (p *ProductStorage) Delete(ctx context.Context, ProdID int) error {
 	return nil
 }
 
-func (p *ProductStorage) GetAll(ctx context.Context, SubCatID int) ([]map[string]interface{}, error) {
+func (p *ProductStorage) GetAll(ctx context.Context, CatID, SubCatID int) ([]map[string]interface{}, error) {
 	var m []map[string]interface{}
 	var i ProdForClient
 	query, args, err := squirrel.Select("id", "content_key", "created_at").From(prodTable).Where(squirrel.Eq{"subcategory_id": SubCatID}).PlaceholderFormat(squirrel.Dollar).ToSql()
@@ -108,17 +109,20 @@ func (p *ProductStorage) GetForClient(ctx context.Context, SubcatID, Count int) 
 	query, args, err := squirrel.Select("content_key", "id").PlaceholderFormat(squirrel.Dollar).From(prodTable).
 		Where(squirrel.Eq{"subcategory_id": SubcatID}).Suffix(fmt.Sprintf("LIMIT %d", Count)).ToSql()
 	if err != nil {
+		logrus.Println(err)
 		return nil, err
 	}
 
 	rows, err := p.c.Query(ctx, query, args...)
 	if err != nil {
+		logrus.Println(err)
 		return nil, err
 	}
 
 	for rows.Next() {
 		err := rows.Scan(&i.Content, &i.ID)
 		if err != nil {
+			logrus.Println(err)
 			return nil, err
 		}
 		i.SubcategoryID = SubcatID

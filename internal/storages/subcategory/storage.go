@@ -118,10 +118,10 @@ func (c *SubcategoryStorage) Delete(ctx context.Context, SubCatID int) error {
 	return nil
 }
 
-func (c *SubcategoryStorage) GetOne(ctx context.Context, SubCatID int) (map[string]interface{}, error) {
+func (c *SubcategoryStorage) GetOne(ctx context.Context, CatID, SubCatID int) (map[string]interface{}, error) {
 	var cat Subcategory
 
-	query, args, err := squirrel.Select("title_ru", "title_eng", "category_id", "subitem_id", "created_at").Where(squirrel.Eq{"id": SubCatID}).From(table).
+	query, args, err := squirrel.Select("title_ru", "title_eng", "category_id", "subitem_id", "created_at").Where(squirrel.Eq{"id": SubCatID, "category_id": CatID}).From(table).
 		PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
 		logrus.Printf("error: %v", err)

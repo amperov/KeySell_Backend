@@ -9,10 +9,10 @@ type SubcategoryStorage interface {
 	Create(ctx context.Context, m map[string]interface{}) (int, error)
 	Update(ctx context.Context, m map[string]interface{}, SubCatID int) (int, error)
 	Delete(ctx context.Context, SubCatID int) error
-	GetOne(ctx context.Context, SubCatID int) (map[string]interface{}, error)
+	GetOne(ctx context.Context, CatID, SubCatID int) (map[string]interface{}, error)
 }
 type ProductStorage interface {
-	GetAll(ctx context.Context, SubCatID int) ([]map[string]interface{}, error)
+	GetAll(ctx context.Context, CatID, SubCatID int) ([]map[string]interface{}, error)
 }
 
 type CatStore interface {
@@ -58,11 +58,11 @@ func (s *SubcategoryService) Get(ctx context.Context, UserID, CatID, SubCatID in
 	if belong == false {
 		return nil, errors.New("you dont have permissions")
 	}
-	SubCat, err := s.SubcatStore.GetOne(ctx, SubCatID)
+	SubCat, err := s.SubcatStore.GetOne(ctx, CatID, SubCatID)
 	if err != nil {
 		return nil, err
 	}
-	AllProducts, err := s.ProdStore.GetAll(ctx, SubCatID)
+	AllProducts, err := s.ProdStore.GetAll(ctx, CatID, SubCatID)
 	if err != nil {
 		return nil, err
 	}

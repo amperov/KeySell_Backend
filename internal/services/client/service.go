@@ -65,10 +65,12 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 		if err != nil {
 			return nil, err
 		}
+
 		Count, CategoryTitle, SubcategoryTitle, MapForHistory, err := c.Digi.GetInfo(ctx, UniqueCode, Token)
 		if err != nil {
 			return nil, err
 		}
+
 		CategoryID, Message, err := c.CategoryStore.GetIDByTitle(ctx, CategoryTitle)
 		if err != nil {
 			return nil, err
@@ -83,6 +85,10 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 		ProdFromStore, err := c.ProdStore.GetForClient(ctx, SubcategoryID, Count)
 		if err != nil {
 			return nil, err
+		}
+
+		for _, prod := range ProdFromStore {
+			prod["unique_inv"] = MapForHistory["unique_inv"]
 		}
 
 		pkg.SendMessage(Message, MapForHistory["unique_inv"].(int), Token)
