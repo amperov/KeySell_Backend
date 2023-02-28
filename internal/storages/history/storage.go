@@ -96,7 +96,6 @@ func (h *HistoryStorage) GetOneTransaction(ctx context.Context, TransactID int) 
 
 func (h *HistoryStorage) GetByUC(ctx context.Context, UniqueCode string, UserID int) ([]map[string]interface{}, error) {
 	var transtact Transaction
-	m := make(map[string]interface{})
 	query, args, err := squirrel.
 		Select("id", "category_name", "subcategory_name",
 			"client_email", "amount", "profit", "count",
@@ -110,16 +109,16 @@ func (h *HistoryStorage) GetByUC(ctx context.Context, UniqueCode string, UserID 
 
 	row := h.c.QueryRow(ctx, query, args...)
 
-	err = row.Scan(&transtact.ID, &transtact.Category, &transtact.Subcategory, &transtact.UniqueCode.UniqueCode,
-		&transtact.ClientEmail, &transtact.Amount, &transtact.Profit, &transtact.CountGoods,
-		&transtact.UniqueInv, &transtact.UniqueCode.DateDelivery, &transtact.UniqueCode.DateConfirmed,
-		&transtact.Content, &transtact.UniqueCode.State, &transtact.AmountUSD, &transtact.UniqueCode.DateCheck)
+	err = row.Scan(&transtact.ID, &transtact.Category, &transtact.Subcategory, &transtact.ClientEmail,
+		&transtact.Amount, &transtact.Profit, &transtact.CountGoods, &transtact.UniqueInv, &transtact.UniqueCode.DateDelivery, &transtact.UniqueCode.DateConfirmed, &transtact.Content,
+		&transtact.UniqueCode.State, &transtact.AmountUSD, &transtact.DateCheck)
 	if err != nil {
 		logrus.Debugf("error scanning: %v", err)
 		return nil, err
 	}
+	transtact.UniqueCode.UniqueCode = UniqueCode
 	var ArrayTransactions []map[string]interface{}
-	ArrayTransactions = append(ArrayTransactions, m)
+	ArrayTransactions = append(ArrayTransactions, transtact.ToMap())
 
 	return ArrayTransactions, nil
 }
