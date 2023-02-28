@@ -29,8 +29,8 @@ func NewProductHandler(ware auth.MiddleWare, ps ProductService) *ProductHandler 
 func (h *ProductHandler) Register(r *httprouter.Router) {
 	r.POST("/api/seller/category/:cat_id/subcategory/:subcat_id/one", h.ware.IsAuth(h.CreateOne))
 	r.POST("/api/seller/category/:cat_id/subcategory/:subcat_id/many", h.ware.IsAuth(h.CreateMany))
-	r.PATCH("/api/seller/category/:cat_id/subcategory/:subcat_id/products/:product_id", h.ware.IsAuth(h.UpdateProduct))
-	r.DELETE("/api/seller/category/:cat_id/subcategory/:subcat_id/products/:product_id", h.ware.IsAuth(h.DeleteProduct))
+	r.PATCH("/api/seller/category/:cat_id/subcategory/:subcat_id/products/:prod_id", h.ware.IsAuth(h.UpdateProduct))
+	r.DELETE("/api/seller/category/:cat_id/subcategory/:subcat_id/products/:prod_id", h.ware.IsAuth(h.DeleteProduct))
 }
 
 func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
