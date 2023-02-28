@@ -47,7 +47,7 @@ func (h *CategoryHandler) CreateCategory(w http.ResponseWriter, r *http.Request,
 		return
 	}
 
-	err := tooling.GetFromBody(r.Body, input)
+	err := tooling.GetFromBody(r.Body, &input)
 	if err != nil {
 		return
 	}
