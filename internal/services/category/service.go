@@ -3,6 +3,7 @@ package category
 import (
 	"context"
 	"errors"
+	"github.com/sirupsen/logrus"
 )
 
 type CategoryStorage interface {
@@ -60,20 +61,24 @@ func (c *CategoryService) GetOne(ctx context.Context, UserID int, CatID int) (ma
 	if belong == false {
 		return nil, errors.New("you dont have permissions")
 	}
+	logrus.Println("Belong:", belong)
 
 	Category, err := c.CatStore.GetOne(ctx, CatID)
 	if err != nil {
+		logrus.Printf("Get One Cat: %v", err)
 		return nil, err
 	}
 	SubCategories, err := c.SubCatStore.GetAll(ctx, CatID)
 	if err != nil {
+		logrus.Printf("Get All subcats: %v", err)
 		return nil, err
 	}
 
 	for _, subcat := range SubCategories {
 		count, err := c.ProdStore.GetCount(ctx, subcat["id"].(int))
 		if err != nil {
-			return nil, err
+			logrus.Printf("Get Count Prods: %v", err)
+			continue
 		}
 		subcat["count_products"] = count
 	}
