@@ -30,6 +30,7 @@ type CategoryStore interface {
 }
 
 type ProductStorage interface {
+	DeleteOne(ctx context.Context, ProdID int) error
 	GetForClient(ctx context.Context, SubcategoryID, Count int) ([]map[string]interface{}, error)
 	PreCheck(ctx context.Context, SubItemID int) (bool, error)
 }
@@ -93,19 +94,28 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 			return nil, err
 		}
 
+		var content string
 		for _, prod := range ProdFromStore {
-
 			prod["unique_code"] = MapForHistory["unique_code"]
 			prod["unique_inv"] = MapForHistory["unique_inv"]
+			content += " \n " + prod["content"].(string)
 		}
 
 		pkg.SendMessage(Message, MapForHistory["unique_inv"].(int), Token)
 
+		MapForHistory["content_key"] = content
 		err = c.HistoryStore.SetTransaction(ctx, MapForHistory, UserID)
 		if err != nil {
 			logrus.Println(err)
 			return nil, err
 		}
+		for _, Prod := range ProdFromStore {
+			err := c.ProdStore.DeleteOne(ctx, Prod["id"].(int))
+			if err != nil {
+				return nil, err
+			}
+		}
+
 		return ProdFromStore, nil
 	}
 
