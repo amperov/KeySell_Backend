@@ -17,7 +17,7 @@ func (c *CreateCategoryInput) ToMap() map[string]interface{} {
 	cat["description"] = c.Description
 	cat["created_at"] = time.Now().String()
 	cat["user_id"] = c.UserID
-	cat["message"] = c.Message
+	cat["message_client"] = c.Message
 	return cat
 }
 
@@ -41,7 +41,7 @@ func (c *UpdateCategoryInput) ToMap() map[string]interface{} {
 		cat["description"] = c.Description
 	}
 	if c.Message != "" {
-		cat["message"] = c.Message
+		cat["message_client"] = c.Message
 	}
 	return cat
 }
