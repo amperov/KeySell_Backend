@@ -77,7 +77,7 @@ func (c *CategoryService) GetOne(ctx context.Context, UserID int, CatID int) (ma
 		}
 		subcat["count_products"] = count
 	}
-
+	Category["user_id"] = UserID
 	Category["subcategories"] = SubCategories
 	return Category, nil
 }
@@ -93,6 +93,7 @@ func (c *CategoryService) GetAll(ctx context.Context, UserID int) ([]map[string]
 		if err != nil {
 			count = 0
 		}
+		m["user_id"] = UserID
 		m["count_subcategories"] = count
 	}
 	return all, nil
