@@ -44,7 +44,7 @@ func (h *SubcategoryHandler) CreateSubcategory(w http.ResponseWriter, r *http.Re
 
 	CatID := tooling.GetCategoryID(params)
 
-	err := tooling.GetFromBody(r.Body, input)
+	err := tooling.GetFromBody(r.Body, &input)
 	if err != nil {
 		return
 	}

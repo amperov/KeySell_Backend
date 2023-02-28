@@ -71,7 +71,7 @@ func (h *CategoryHandler) UpdateCategory(w http.ResponseWriter, r *http.Request,
 
 	CatID := tooling.GetCategoryID(params)
 
-	err := tooling.GetFromBody(r.Body, upd)
+	err := tooling.GetFromBody(r.Body, &upd)
 	if err != nil {
 		return
 	}

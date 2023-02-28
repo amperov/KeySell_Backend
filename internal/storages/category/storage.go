@@ -96,7 +96,7 @@ func (c *CategoryStorage) Delete(ctx context.Context, CatID int) error {
 func (c *CategoryStorage) GetOne(ctx context.Context, CatID int) (map[string]interface{}, error) {
 	var cat Category
 
-	query, args, err := squirrel.Select("title_ru", "title_eng", "description", "message_client").
+	query, args, err := squirrel.Select("title_ru", "title_eng", "description", "message_client", "created_at").
 		Where(squirrel.Eq{"id": CatID}).From(table).
 		PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
@@ -105,7 +105,7 @@ func (c *CategoryStorage) GetOne(ctx context.Context, CatID int) (map[string]int
 	}
 
 	row := c.c.QueryRow(ctx, query, args...)
-	err = row.Scan(&cat.TitleRu, &cat.TitleEng, &cat.Description, &cat.Message)
+	err = row.Scan(&cat.TitleRu, &cat.TitleEng, &cat.Description, &cat.Message, &cat.CreatedAt)
 	if err != nil {
 		logrus.Println(err)
 		return nil, err
@@ -117,7 +117,7 @@ func (c *CategoryStorage) GetOne(ctx context.Context, CatID int) (map[string]int
 
 func (c *CategoryStorage) GetAll(ctx context.Context, UserID int) ([]map[string]interface{}, error) {
 
-	query, args, err := squirrel.Select("id", "title_ru", "title_eng", "description", "message_client").
+	query, args, err := squirrel.Select("id", "title_ru", "title_eng", "description", "message_client", "created_at").
 		Where(squirrel.Eq{"user_id": UserID}).
 		PlaceholderFormat(squirrel.Dollar).From(table).ToSql()
 	if err != nil {
@@ -135,7 +135,7 @@ func (c *CategoryStorage) GetAll(ctx context.Context, UserID int) ([]map[string]
 	for rows.Next() {
 		var cat Category
 
-		err = rows.Scan(&cat.ID, &cat.TitleRu, &cat.TitleEng, &cat.Description, &cat.Message)
+		err = rows.Scan(&cat.ID, &cat.TitleRu, &cat.TitleEng, &cat.Description, &cat.Message, &cat.CreatedAt)
 		if err != nil {
 			logrus.Print(err)
 			return nil, err
