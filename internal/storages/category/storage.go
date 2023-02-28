@@ -20,7 +20,7 @@ func NewCategoryStorage(c *pgxpool.Pool) *CategoryStorage {
 func (c *CategoryStorage) Belong(ctx context.Context, UserID, CategoryID int) bool {
 	var exist bool
 
-	query := "SELECT EXISTS(title_ru) FROM category WHERE user_id=$1 AND id=$2"
+	query := "SELECT exists(SELECT title_ru FROM category WHERE user_id=$1 AND id=$2)"
 
 	row := c.c.QueryRow(ctx, query, UserID, CategoryID)
 	err := row.Scan(&exist)
