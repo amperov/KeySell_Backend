@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/viper"
 	"net/http"
 )
@@ -10,8 +9,8 @@ type HTTPServer struct {
 	Server *http.Server
 }
 
-func NewHTTPServer(router *httprouter.Router) *HTTPServer {
-	return &HTTPServer{Server: &http.Server{Handler: router}}
+func NewHTTPServer(handler http.Handler) *HTTPServer {
+	return &HTTPServer{Server: &http.Server{Handler: handler}}
 }
 
 func (s *HTTPServer) Run() error {

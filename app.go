@@ -24,6 +24,7 @@ import (
 	"KeySell/pkg/digi"
 	"context"
 	"github.com/julienschmidt/httprouter"
+	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -47,6 +48,23 @@ func main() {
 		logrus.Fatal(err)
 		return
 	}
+
+	options := cors.Options{
+		AllowedOrigins:         []string{"http://localhost:3000", "http://185.185.68.187", "https://keys-store.online", "*"},
+		AllowOriginFunc:        nil,
+		AllowOriginRequestFunc: nil,
+		AllowedMethods:         []string{"POST", "PATCH", "GET", "DELETE"},
+		AllowedHeaders:         []string{"Access-Control-Allow-Origin", "Authorization", "Content-Type"},
+		ExposedHeaders:         nil,
+		MaxAge:                 0,
+		AllowCredentials:       true,
+		AllowPrivateNetwork:    false,
+		OptionsPassthrough:     false,
+		OptionsSuccessStatus:   0,
+		Debug:                  false,
+	}
+	c := cors.New(options)
+	handler := c.Handler(rtr)
 
 	DigiClient := digi.NewDigiClient()
 	TokenManager := auth.NewTokenManager(PGClient)
@@ -78,7 +96,7 @@ func main() {
 	ClientHandlers := client2.NewClientHandlers(ClientService)
 	ClientHandlers.Register(rtr)
 
-	server := pkg.NewHTTPServer(rtr)
+	server := pkg.NewHTTPServer(handler)
 	err = server.Run()
 	if err != nil {
 		logrus.Fatal(err)
