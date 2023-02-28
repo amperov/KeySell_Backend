@@ -38,19 +38,17 @@ func (p *ProductStorage) Create(ctx context.Context, m map[string]interface{}) (
 }
 
 func (p *ProductStorage) Update(ctx context.Context, m map[string]interface{}, ProdID int) (int, error) {
-	var id int
-	query, args, err := squirrel.Update(prodTable).PlaceholderFormat(squirrel.Dollar).Set("content_key", m["content_key"]).Suffix("RETURNING id").Where(squirrel.Eq{"id": ProdID}).ToSql()
+
+	query, args, err := squirrel.Update(prodTable).PlaceholderFormat(squirrel.Dollar).Set("content_key", m["content_key"]).Where(squirrel.Eq{"id": ProdID}).ToSql()
 	if err != nil {
 		return 0, err
 	}
-	row := p.c.QueryRow(ctx, query, args...)
-
-	err = row.Scan(&id)
+	_, err = p.c.Exec(ctx, query, args...)
 	if err != nil {
 		return 0, err
 	}
 
-	return id, nil
+	return ProdID, nil
 }
 
 func (p *ProductStorage) Delete(ctx context.Context, ProdID int) error {
