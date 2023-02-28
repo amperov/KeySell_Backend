@@ -17,7 +17,8 @@ CREATE TABLE category(
 );
 CREATE TABLE subcategory (
                              id serial primary key ,
-                             title text not null unique ,
+                             title_ru text not null unique ,
+                             title_eng text not null unique,
                              subitem_id int,
                              created_at text,
                              subtype_value int,
