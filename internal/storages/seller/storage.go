@@ -117,8 +117,6 @@ func (s *SellerStorage) GetInfo(ctx context.Context, UserID int) (map[string]int
 
 	row := s.c.QueryRow(ctx, query, args...)
 	err = row.Scan(&user.Username,
-		&user.Firstname,
-		&user.Lastname,
 		&user.SellerID,
 		&user.SellerKey)
 	if err != nil {
