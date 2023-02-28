@@ -6,7 +6,6 @@ type Category struct {
 	TitleEng    string
 	Description string
 	CreatedAt   string
-	ItemID      int
 	Message     string
 	UserID      int
 }
@@ -14,7 +13,6 @@ type Category struct {
 func (m *Category) ToMap() map[string]interface{} {
 	ModelMap := make(map[string]interface{})
 	ModelMap["id"] = m.ID
-	ModelMap["item_id"] = m.ItemID
 	ModelMap["title_ru"] = m.TitleRu
 	ModelMap["title_eng"] = m.TitleEng
 	ModelMap["description"] = m.Description
