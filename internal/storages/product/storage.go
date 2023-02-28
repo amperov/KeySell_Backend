@@ -68,7 +68,7 @@ func (p *ProductStorage) Delete(ctx context.Context, ProdID int) error {
 func (p *ProductStorage) GetAll(ctx context.Context, SubCatID int) ([]map[string]interface{}, error) {
 	var m []map[string]interface{}
 	var i ProdForClient
-	query, args, err := squirrel.Select("id", "content_key").From(prodTable).Where(squirrel.Eq{"subcategory_id": SubCatID}).PlaceholderFormat(squirrel.Dollar).ToSql()
+	query, args, err := squirrel.Select("id", "content_key", "created_at").From(prodTable).Where(squirrel.Eq{"subcategory_id": SubCatID}).PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
 		log.Println(err)
 		return nil, err

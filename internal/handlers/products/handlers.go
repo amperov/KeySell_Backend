@@ -85,7 +85,7 @@ func (h *ProductHandler) CreateOne(w http.ResponseWriter, r *http.Request, param
 
 	CatID, SubCatID := tooling.GetTwoIDs(params)
 
-	err := tooling.GetFromBody(r.Body, input)
+	err := tooling.GetFromBody(r.Body, &input)
 	if err != nil {
 		return
 	}
@@ -109,7 +109,7 @@ func (h *ProductHandler) CreateMany(w http.ResponseWriter, r *http.Request, para
 
 	CatID, SubCatID := tooling.GetTwoIDs(params)
 
-	err := tooling.GetFromBody(r.Body, input)
+	err := tooling.GetFromBody(r.Body, &input)
 	if err != nil {
 		return
 	}

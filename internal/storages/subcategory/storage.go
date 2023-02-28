@@ -21,7 +21,7 @@ func NewSubcategoryStorage(c *pgxpool.Pool) *SubcategoryStorage {
 
 func (c *SubcategoryStorage) GetAll(ctx context.Context, CatID int) ([]map[string]interface{}, error) {
 	var subcats []Subcategory
-	query, args, err := squirrel.Select("id", "title_ru", "title_eng", "subitem_id").Where(squirrel.Eq{"category_id": CatID}).PlaceholderFormat(squirrel.Dollar).From(table).ToSql()
+	query, args, err := squirrel.Select("id", "title_ru", "title_eng", "subitem_id", "created_at").Where(squirrel.Eq{"category_id": CatID}).PlaceholderFormat(squirrel.Dollar).From(table).ToSql()
 	if err != nil {
 		logrus.Printf("error make query: %v", err)
 		return nil, err
@@ -36,7 +36,7 @@ func (c *SubcategoryStorage) GetAll(ctx context.Context, CatID int) ([]map[strin
 	for rows.Next() {
 		var cat Subcategory
 
-		err = rows.Scan(&cat.ID, &cat.TitleRU, &cat.TitleENG, &cat.SubItemID)
+		err = rows.Scan(&cat.ID, &cat.TitleRU, &cat.TitleENG, &cat.SubItemID, &cat.CreateAt)
 		if err != nil {
 			logrus.Printf("error scan: %v", err)
 			return nil, err
@@ -121,7 +121,7 @@ func (c *SubcategoryStorage) Delete(ctx context.Context, SubCatID int) error {
 func (c *SubcategoryStorage) GetOne(ctx context.Context, SubCatID int) (map[string]interface{}, error) {
 	var cat Subcategory
 
-	query, args, err := squirrel.Select("title_ru", "title_eng", "category_id", "subitem_id").Where(squirrel.Eq{"id": SubCatID}).From(table).
+	query, args, err := squirrel.Select("title_ru", "title_eng", "category_id", "subitem_id", "created_at").Where(squirrel.Eq{"id": SubCatID}).From(table).
 		PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
 		logrus.Printf("error: %v", err)
@@ -129,7 +129,7 @@ func (c *SubcategoryStorage) GetOne(ctx context.Context, SubCatID int) (map[stri
 	}
 
 	row := c.c.QueryRow(ctx, query, args...)
-	err = row.Scan(&cat.TitleRU, &cat.TitleENG, &cat.CategoryID, &cat.SubItemID)
+	err = row.Scan(&cat.TitleRU, &cat.TitleENG, &cat.CategoryID, &cat.SubItemID, &cat.CreateAt)
 	if err != nil {
 		logrus.Printf("error: %v", err)
 		return nil, err
