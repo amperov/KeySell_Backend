@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
 )
@@ -98,13 +99,16 @@ func (h *CategoryHandler) GetCategory(w http.ResponseWriter, r *http.Request, pa
 
 	CatID := tooling.GetCategoryID(params)
 
+	logrus.Println("CatID From GetCategoryID:", CatID)
 	Category, err := h.cat.GetOne(r.Context(), UserID, CatID)
 	if err != nil {
+		logrus.Println(err)
 		return
 	}
 
 	MapCategory, err := json.Marshal(Category)
 	if err != nil {
+		logrus.Println(err)
 		return
 	}
 	w.Write(MapCategory)
@@ -115,12 +119,14 @@ func (h *CategoryHandler) GetAllCategory(w http.ResponseWriter, r *http.Request,
 
 	Categories, err := h.cat.GetAll(r.Context(), UserID)
 	if err != nil {
+		logrus.Println(err)
 		w.WriteHeader(400)
 		w.Write([]byte(fmt.Sprintf(`"error": "%v"`, err)))
 		return
 	}
 	MapCategories, err := json.Marshal(Categories)
 	if err != nil {
+		logrus.Println(err)
 		return
 	}
 	w.Write(MapCategories)

@@ -100,12 +100,14 @@ func (c *CategoryStorage) GetOne(ctx context.Context, CatID int) (map[string]int
 		Where(squirrel.Eq{"id": CatID}).From(table).
 		PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
+		logrus.Println(err)
 		return nil, err
 	}
 
 	row := c.c.QueryRow(ctx, query, args...)
 	err = row.Scan(&cat.TitleRu, &cat.TitleEng, &cat.Description, &cat.Message)
 	if err != nil {
+		logrus.Println(err)
 		return nil, err
 	}
 
