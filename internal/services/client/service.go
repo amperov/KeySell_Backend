@@ -3,6 +3,7 @@ package client
 import (
 	"KeySell/pkg"
 	"context"
+	"github.com/sirupsen/logrus"
 )
 
 type DigiClient interface {
@@ -60,30 +61,35 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 	// 1 Case: User get products before
 	ProdFromTx, err := c.HistoryStore.GetByUC(ctx, UniqueCode, UserID)
 	if err != nil || ProdFromTx == nil {
+		logrus.Println(err)
 		// 2 Case: User not get products before
 		Token, err := c.Digi.Auth(ctx, SellerID, SellerKey)
 		if err != nil {
+			logrus.Println(err)
 			return nil, err
 		}
 
 		Count, CategoryTitle, SubcategoryTitle, MapForHistory, err := c.Digi.GetInfo(ctx, UniqueCode, Token)
 		if err != nil {
+			logrus.Println(err)
 			return nil, err
 		}
 
 		CategoryID, Message, err := c.CategoryStore.GetIDByTitle(ctx, CategoryTitle)
 		if err != nil {
+			logrus.Println(err)
 			return nil, err
 		}
 
 		SubcategoryID, err := c.SubcatStore.GetIDByTitle(ctx, SubcategoryTitle, CategoryID)
 		if err != nil {
+			logrus.Println(err)
 			return nil, err
 		}
 
-		//Check Is Composite
 		ProdFromStore, err := c.ProdStore.GetForClient(ctx, SubcategoryID, Count)
 		if err != nil {
+			logrus.Println(err)
 			return nil, err
 		}
 
@@ -95,6 +101,7 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 
 		err = c.HistoryStore.SetTransaction(ctx, MapForHistory, UserID)
 		if err != nil {
+			logrus.Println(err)
 			return nil, err
 		}
 		return ProdFromStore, nil
