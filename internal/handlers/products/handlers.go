@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
 	"strings"
@@ -50,7 +51,7 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request, p
 	if err != nil {
 		w.Write([]byte(fmt.Sprintf(`"error": "%v"`, err)))
 		w.WriteHeader(400)
-		log.Println(err)
+		logrus.Println(err)
 		return
 	}
 	w.Write([]byte(fmt.Sprintf(`{"status": "product %d updated"}`, id)))

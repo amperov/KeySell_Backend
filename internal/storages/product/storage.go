@@ -39,7 +39,7 @@ func (p *ProductStorage) Create(ctx context.Context, m map[string]interface{}) (
 
 func (p *ProductStorage) Update(ctx context.Context, m map[string]interface{}, ProdID int) (int, error) {
 	var id int
-	query, args, err := squirrel.Update(prodTable).PlaceholderFormat(squirrel.Dollar).SetMap(m).Suffix("RETURNING id").Where(squirrel.Eq{"id": ProdID}).ToSql()
+	query, args, err := squirrel.Update(prodTable).PlaceholderFormat(squirrel.Dollar).Set("content_key", m["content_key"]).Suffix("RETURNING id").Where(squirrel.Eq{"id": ProdID}).ToSql()
 	if err != nil {
 		return 0, err
 	}
