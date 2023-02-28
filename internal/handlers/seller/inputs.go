@@ -14,7 +14,6 @@ func (m SignUpInput) ToMap() map[string]interface{} {
 	if m.Username != "" {
 		SellerMap["username"] = m.Username
 	}
-
 	if m.Password != "" {
 		SellerMap["pass"] = m.Password
 	}
