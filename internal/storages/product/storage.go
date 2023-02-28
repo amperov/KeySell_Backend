@@ -80,7 +80,7 @@ func (p *ProductStorage) GetAll(ctx context.Context, SubCatID int) ([]map[string
 	}
 	for rows.Next() {
 		i.SubcategoryID = SubCatID
-		err := rows.Scan(&i.ID, &i.Content)
+		err := rows.Scan(&i.ID, &i.Content, &i.CreatedAt)
 		if err != nil {
 			log.Println(err)
 			return nil, err
