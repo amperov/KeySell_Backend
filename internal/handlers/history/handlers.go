@@ -14,6 +14,7 @@ import (
 type HistoryService interface {
 	GetAllTransactions(ctx context.Context, UserID int) (map[string]interface{}, error)
 	GetOneTransaction(ctx context.Context, UserID, TransactID int) (map[string]interface{}, error)
+	EditTransaction(ctx context.Context, UserID, TransactID int, Key string) error
 }
 
 type HistoryHandler struct {
@@ -28,6 +29,7 @@ func NewHistoryHandler(ware auth.MiddleWare, hs HistoryService) *HistoryHandler 
 func (h *HistoryHandler) Register(r *httprouter.Router) {
 	r.GET("/api/seller/history", h.ware.IsAuth(h.GetHistory))
 	r.GET("/api/seller/history/:tran_id", h.ware.IsAuth(h.GetFullTransaction))
+	r.PATCH("/api/seller/history/:tran_id", h.ware.IsAuth(h.EditTransaction))
 }
 
 func (h *HistoryHandler) GetHistory(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -86,4 +88,27 @@ func (h *HistoryHandler) GetFullTransaction(w http.ResponseWriter, r *http.Reque
 		w.Write([]byte(fmt.Sprintf(`"error": "%v"`, err)))
 		return
 	}
+}
+
+type EditTransationInput struct {
+	ContentKey string `json:"content_key,omitempty"`
+}
+
+func (h *HistoryHandler) EditTransaction(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	UserID := r.Context().Value("user_id").(int)
+
+	tranID := tooling.GetTranID(params)
+
+	var input EditTransationInput
+
+	err := tooling.GetFromBody(r.Body, &input)
+	if err != nil {
+		return
+	}
+
+	err = h.hs.EditTransaction(r.Context(), UserID, tranID, input.ContentKey)
+	if err != nil {
+		return
+	}
+
 }
