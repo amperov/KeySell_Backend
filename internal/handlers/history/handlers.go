@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
 )
@@ -103,11 +104,14 @@ func (h *HistoryHandler) EditTransaction(w http.ResponseWriter, r *http.Request,
 
 	err := tooling.GetFromBody(r.Body, &input)
 	if err != nil {
+		logrus.Println(err)
 		return
 	}
 
 	err = h.hs.EditTransaction(r.Context(), UserID, tranID, input.ContentKey)
 	if err != nil {
+		logrus.Println(err)
+		w.Write([]byte(fmt.Sprintf(`{"error": "%v"}`, err)))
 		return
 	}
 

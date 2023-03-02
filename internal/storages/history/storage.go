@@ -15,7 +15,7 @@ type HistoryStorage struct {
 }
 
 func (h *HistoryStorage) EditTransaction(ctx context.Context, TransactID int, Key string) error {
-	query, args, err := squirrel.Update(table).Where(squirrel.Eq{"id": TransactID}).Set("content_key", Key).ToSql()
+	query, args, err := squirrel.Update(table).Where(squirrel.Eq{"id": TransactID}).Set("content_key", Key).PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
 		return err
 	}
