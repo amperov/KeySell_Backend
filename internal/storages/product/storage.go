@@ -149,7 +149,7 @@ func (p *ProductStorage) PreCheck(ctx context.Context, SubItemID int) (bool, err
 
 	var id int
 	var subcatStr string
-	query, args, err := squirrel.Select("id", "title").PlaceholderFormat(squirrel.Dollar).
+	query, args, err := squirrel.Select("id", "title_ru").PlaceholderFormat(squirrel.Dollar).
 		Where(squirrel.Eq{"subitem_id": SubItemID}).From("subcategory").ToSql()
 	if err != nil {
 		return false, err
