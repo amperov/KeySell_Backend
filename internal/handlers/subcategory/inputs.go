@@ -29,9 +29,10 @@ func (c *CreateSubcatInput) ToMap() map[string]interface{} {
 }
 
 type UpdateSubcatInput struct {
-	TitleRU  string `json:"title_ru,omitempty"`
-	TitleEng string `json:"title_eng,omitempty"`
-	CatID    int    `json:"category_id"`
+	TitleRU   string `json:"title_ru,omitempty"`
+	TitleEng  string `json:"title_eng,omitempty"`
+	CatID     int    `json:"category_id,omitempty"`
+	SubItemID int    `json:"subitem_id,omitempty"`
 }
 
 func (c *UpdateSubcatInput) ToMap() map[string]interface{} {
@@ -43,7 +44,9 @@ func (c *UpdateSubcatInput) ToMap() map[string]interface{} {
 	if c.TitleEng != "" {
 		m["title_eng"] = c.TitleEng
 	}
-
+	if c.SubItemID != 0 {
+		m["subitem_id"] = c.SubItemID
+	}
 	m["category_id"] = c.CatID
 	return m
 }
