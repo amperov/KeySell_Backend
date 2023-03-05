@@ -7,7 +7,7 @@ CREATE TABLE sellers (
 );
 CREATE TABLE category(
                          id serial primary key ,
-                         title_ru text unique not null ,
+                         title_ru text not null ,
                          title_eng text,
                          item_id int,
                          description text,
@@ -17,8 +17,8 @@ CREATE TABLE category(
 );
 CREATE TABLE subcategory (
                              id serial primary key ,
-                             title_ru text not null unique ,
-                             title_eng text not null unique,
+                             title_ru text not null ,
+                             title_eng text not null ,
                              subitem_id int,
                              created_at text,
                              subtype_value int,
