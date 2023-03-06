@@ -106,7 +106,7 @@ func (p *ProductStorage) GetForClient(ctx context.Context, SubcatID, Count int) 
 	var m []map[string]interface{}
 	var i ProdForClient
 
-	query, args, err := squirrel.Select("content_key", "id").PlaceholderFormat(squirrel.Dollar).From(prodTable).
+	query, args, err := squirrel.Select("content_key", "id", "created_at").PlaceholderFormat(squirrel.Dollar).From(prodTable).
 		Where(squirrel.Eq{"subcategory_id": SubcatID}).Suffix(fmt.Sprintf("LIMIT %d", Count)).ToSql()
 	if err != nil {
 		logrus.Println(err)
@@ -120,7 +120,7 @@ func (p *ProductStorage) GetForClient(ctx context.Context, SubcatID, Count int) 
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&i.Content, &i.ID)
+		err := rows.Scan(&i.Content, &i.ID, &i.CreatedAt)
 		if err != nil {
 			logrus.Println(err)
 			return nil, err

@@ -103,6 +103,7 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 
 		pkg.SendMessage(Message, MapForHistory["unique_inv"].(int), Token)
 
+		MapForHistory["created_at"] = ProdFromStore[0]["created_at"]
 		MapForHistory["content_key"] = content
 		err = c.HistoryStore.SetTransaction(ctx, MapForHistory, UserID)
 		if err != nil {

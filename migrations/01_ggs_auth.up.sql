@@ -49,5 +49,6 @@ CREATE TABLE transactions(
                              date_check text,
                              date_delivery text,
                              date_confirmed text,
-                             state text
+                             state text,
+                             created_at text
 );
