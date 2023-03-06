@@ -51,13 +51,16 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 	//Getting UserID By Username
 	UserID, err := c.SellerStore.GetIDByUsername(ctx, Username)
 	if err != nil {
+		logrus.Println(err)
 		return nil, err
 	}
 	// Getting Data for DigiSeller
 	SellerID, SellerKey, err := c.SellerStore.GetDataByID(ctx, UserID)
 	if err != nil {
+		logrus.Println(err)
 		return nil, err
 	}
+	logrus.Println(SellerID, SellerKey)
 
 	// 1 Case: User get products before
 	ProdFromTx, err := c.HistoryStore.GetByUC(ctx, UniqueCode, UserID)
