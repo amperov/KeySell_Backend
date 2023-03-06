@@ -61,7 +61,7 @@ func main() {
 		AllowPrivateNetwork:    false,
 		OptionsPassthrough:     false,
 		OptionsSuccessStatus:   0,
-		Debug:                  false,
+		Debug:                  true,
 	}
 	c := cors.New(options)
 	handler := c.Handler(rtr)
