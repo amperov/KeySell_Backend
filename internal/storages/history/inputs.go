@@ -41,9 +41,6 @@ func (t *Transaction) ToMap() map[string]interface{} {
 
 	m["unique_code"] = t.UniqueCode.UniqueCode
 	m["date_check"] = t.DateCheck
-	m["date_delivery"] = t.UniqueCode.DateDelivery
-	m["date_confirmed"] = t.UniqueCode.DateConfirmed
-	m["state"] = t.UniqueCode.State
 
 	logrus.Debugf("Transaction info: %v", m)
 
