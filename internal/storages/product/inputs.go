@@ -14,9 +14,9 @@ func (c *ProdForClient) ToMap() map[string]interface{} {
 	m := make(map[string]interface{})
 
 	m["id"] = c.ID
-	m["content_key"] = c.Content
-	m["category_name"] = c.Category
-	m["subcategory_name"] = c.Subcategory
+	m["content"] = c.Content
+	m["category"] = c.Category
+	m["subcategory"] = c.Subcategory
 	m["date_check"] = c.DateCheck
 
 	return m
