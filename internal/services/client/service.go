@@ -69,6 +69,7 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 			logrus.Println(err)
 			return nil, err
 		}
+		logrus.Println("Token ", Token)
 
 		Count, CategoryTitle, SubcategoryTitle, MapForHistory, err := c.Digi.GetInfo(ctx, UniqueCode, Token)
 		if err != nil {
