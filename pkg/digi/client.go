@@ -103,7 +103,7 @@ func (c *DigiClient) GetInfo(ctx context.Context, UniqueCode, Token string) (int
 	tran.UniqueCode.UniqueCode = UniqueCode
 	tran.UniqueCode.DateConfirmed = input.UniqueCodeState.DateConfirmed
 	tran.UniqueCode.DateDelivery = input.UniqueCodeState.DateDelivery
-	tran.UniqueCode.DateCheck = input.UniqueCodeState.DateCheck
+	tran.DateCheck = input.UniqueCodeState.DateCheck
 	tran.CountGoods = int(input.CntGoods)
 	tran.Amount = int(input.Amount)
 	tran.AmountUSD = int(input.AmountUsd)
