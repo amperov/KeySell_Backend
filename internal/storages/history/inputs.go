@@ -54,6 +54,7 @@ type AllTransactInput struct {
 	ID          int
 	UniqueCode  string
 	AmountUSD   int
+	UniqueInv   int
 	ClientEmail string
 	Category    string
 	Subcategory string
@@ -65,8 +66,9 @@ type AllTransactInput struct {
 func (i *AllTransactInput) ToMap() map[string]interface{} {
 	m := make(map[string]interface{})
 	m["id"] = i.ID
+	m["unique_inv"] = i.UniqueInv
 	m["unique_code"] = i.UniqueCode
-	m["amount_usd"] = i.AmountUSD
+	m["amount"] = i.AmountUSD
 	m["client_email"] = i.ClientEmail
 	m["category_name"] = i.Category
 	m["subcategory_name"] = i.Subcategory
