@@ -98,7 +98,7 @@ func (c *DigiClient) GetInfo(ctx context.Context, UniqueCode, Token string) (int
 		log.Println(err)
 		return 0, "", "", nil, err
 	}
-	logrus.Println(input)
+
 	tran.UniqueInv = input.Inv
 	tran.UniqueCode.UniqueCode = UniqueCode
 	tran.UniqueCode.DateConfirmed = input.UniqueCodeState.DateConfirmed
@@ -107,11 +107,8 @@ func (c *DigiClient) GetInfo(ctx context.Context, UniqueCode, Token string) (int
 	tran.CountGoods = int(input.CntGoods)
 	tran.Amount = int(input.Amount)
 	tran.AmountUSD = int(input.AmountUsd)
-	if len(input.Options) != 0 {
-		tran.Category = input.Options[0].Name
-		tran.Subcategory = input.Options[0].Value
-	}
-
+	tran.Category = input.Options[0].Name
+	tran.Subcategory = input.Options[0].Value
 	tran.ClientEmail = input.Email
 	tran.Profit = input.Profit
 
