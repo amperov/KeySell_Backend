@@ -99,7 +99,7 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 			prod["date_check"] = MapForHistory["date_check"]
 			prod["unique_code"] = MapForHistory["unique_code"]
 			prod["unique_inv"] = MapForHistory["unique_inv"]
-			content += " \n " + prod["content_key"].(string)
+			content += prod["content_key"].(string) + " \n "
 		}
 
 		pkg.SendMessage(Message, MapForHistory["unique_inv"].(int), Token)
