@@ -36,7 +36,7 @@ func (h *HistoryStorage) GetAllTransactions(ctx context.Context, UserID int) (ma
 
 	query, args, err := squirrel.
 		Select("id", "category_name", "subcategory_name", "unique_code",
-			"content_key", "state", "amount", "date_check", "client_email", "unique_inv").
+			"content_key", "state", "amount", "date_check", "client_email", "unique_inv", "created_at").
 		From(table).Where(squirrel.Eq{"user_id": UserID}).
 		PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
@@ -53,7 +53,7 @@ func (h *HistoryStorage) GetAllTransactions(ctx context.Context, UserID int) (ma
 
 	for rows.Next() {
 		err := rows.Scan(&transacts.ID, &transacts.Category, &transacts.Subcategory, &transacts.UniqueCode,
-			&transacts.Content, &transacts.State, &transacts.AmountUSD, &transacts.DateCheck, &transacts.ClientEmail, &transacts.UniqueInv)
+			&transacts.Content, &transacts.State, &transacts.AmountUSD, &transacts.DateCheck, &transacts.ClientEmail, &transacts.UniqueInv, &transacts.CreatedAt)
 		if err != nil {
 			logrus.Debugf("error scanning: %v", err)
 			return nil, err

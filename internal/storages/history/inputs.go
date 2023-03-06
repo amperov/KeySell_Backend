@@ -61,6 +61,7 @@ type AllTransactInput struct {
 	Content     string
 	DateCheck   string
 	State       string
+	CreatedAt   string
 }
 
 func (i *AllTransactInput) ToMap() map[string]interface{} {
@@ -75,5 +76,6 @@ func (i *AllTransactInput) ToMap() map[string]interface{} {
 	m["content_key"] = i.Content
 	m["date_check"] = i.DateCheck
 	m["state"] = i.State
+	m["created_at"] = i.CreatedAt
 	return m
 }
