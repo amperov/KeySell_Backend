@@ -43,11 +43,11 @@ type ClientService struct {
 	Digi          DigiClient
 	SubcatStore   SubcategoryStore
 	CategoryStore CategoryStore
-	Select        tooling.Tool
+	Select        *tooling.Tool
 }
 
-func NewClientService(prodStore ProductStorage, historyStore HistoryStorage, sellerStore SellerStorage, digi DigiClient, subcatStore SubcategoryStore, categoryStore CategoryStore) *ClientService {
-	return &ClientService{ProdStore: prodStore, HistoryStore: historyStore, SellerStore: sellerStore, Digi: digi, SubcatStore: subcatStore, CategoryStore: categoryStore}
+func NewClientService(prodStore ProductStorage, historyStore HistoryStorage, sellerStore SellerStorage, digi DigiClient, subcatStore SubcategoryStore, categoryStore CategoryStore, tool *tooling.Tool) *ClientService {
+	return &ClientService{ProdStore: prodStore, HistoryStore: historyStore, SellerStore: sellerStore, Digi: digi, SubcatStore: subcatStore, CategoryStore: categoryStore, Select: tool}
 }
 
 func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username string) ([]map[string]interface{}, error) {

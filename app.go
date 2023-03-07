@@ -22,6 +22,7 @@ import (
 	"KeySell/pkg/auth"
 	"KeySell/pkg/db"
 	"KeySell/pkg/digi"
+	"KeySell/pkg/tooling"
 	"context"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
@@ -76,12 +77,14 @@ func main() {
 	HistoryStore := history.NewHistoryStorage(PGClient)
 	SellerStore := seller.NewSellerStorage(PGClient)
 
+	SelectTool := tooling.NewTool(ProductStore, SubcategoryStore)
+
 	CategoryService := category2.NewCategoryService(CategoryStore, SubcategoryStore, ProductStore)
 	SubcategoryService := subcategory2.NewSubcategoryService(SubcategoryStore, ProductStore, CategoryStore)
 	ProductService := product2.NewProductService(ProductStore, CategoryStore)
 	SellerService := seller2.NewSellerService(SellerStore, TokenManager)
 	HistoryService := history2.NewHistoryService(HistoryStore)
-	ClientService := client.NewClientService(ProductStore, HistoryStore, SellerStore, DigiClient, SubcategoryStore, CategoryStore)
+	ClientService := client.NewClientService(ProductStore, HistoryStore, SellerStore, DigiClient, SubcategoryStore, CategoryStore, SelectTool)
 
 	CategoryHandler := category3.NewCategoryHandler(MiddleWare, CategoryService)
 	CategoryHandler.Register(rtr)

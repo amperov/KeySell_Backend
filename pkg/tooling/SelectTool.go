@@ -22,6 +22,10 @@ type Tool struct {
 	SubcatStore SubcatStore
 }
 
+func NewTool(prodStore ProdStore, subcatStore SubcatStore) *Tool {
+	return &Tool{ProdStore: prodStore, SubcatStore: subcatStore}
+}
+
 type SubcatCounts struct {
 	Count    int
 	SubcatID int
