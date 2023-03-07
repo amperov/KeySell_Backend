@@ -40,7 +40,7 @@ func (h *ClientHandlers) GetProducts(w http.ResponseWriter, r *http.Request, par
 	if err != nil {
 		log.Printf("error: %+v", err)
 		w.WriteHeader(500)
-		w.Write([]byte(fmt.Sprintf(`"error": "%v"`, err)))
+		w.Write([]byte(fmt.Sprintf(`{"error": "%v"}`, err)))
 		return
 	}
 

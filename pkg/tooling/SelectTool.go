@@ -93,7 +93,7 @@ func (t *Tool) GetCompositeKeys(ctx context.Context, Array []ElementCount) ([]ma
 	for _, value := range SubCounts {
 		prods, err := t.ProdStore.GetForClient(ctx, value.SubcatID, value.Count)
 		if err != nil {
-			logrus.Println(err)
+			logrus.Printf("Get For Client From SelectTool: %v", err)
 			return nil, err
 		}
 		for _, prod := range prods {
@@ -153,7 +153,7 @@ func minimumSumArray(arr []int, sum int) ([]int, error) { //Непосредст
 	}
 
 	if currentSum != sum {
-		return nil, errors.New("NewError")
+		return nil, errors.New("Мы не можем подобрать")
 	}
 	return result, nil
 }

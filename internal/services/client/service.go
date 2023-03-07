@@ -5,6 +5,7 @@ import (
 	"KeySell/pkg/tooling"
 	"context"
 	"github.com/sirupsen/logrus"
+	"log"
 )
 
 type DigiClient interface {
@@ -97,6 +98,7 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 		if composite {
 			ProdFromStore, err = c.Select.SelectTool(ctx, SubcategoryID)
 			if err != nil {
+				log.Println("SelectTool ", err)
 				return nil, err
 			}
 		} else {
