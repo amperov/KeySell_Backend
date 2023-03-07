@@ -25,7 +25,7 @@ type SellerStorage interface {
 
 type SubcategoryStore interface {
 	GetIDByTitle(ctx context.Context, Title string, CategoryID int) (int, error)
-	IsComposite(ctx context.Context, SubCatID int) bool
+	IsComposite(ctx context.Context, SubCatID int) (bool, error)
 }
 
 type CategoryStore interface {
@@ -93,8 +93,12 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 		}
 
 		var ProdFromStore []map[string]interface{}
-		composite := c.SubcatStore.IsComposite(ctx, SubcategoryID)
-
+		composite, err := c.SubcatStore.IsComposite(ctx, SubcategoryID)
+		if err != nil {
+			logrus.Printf("Is Composite: %v", err)
+			return nil, err
+		}
+		logrus.Println("Composite: ", composite)
 		if composite {
 			ProdFromStore, err = c.Select.SelectTool(ctx, SubcategoryID)
 			if err != nil {

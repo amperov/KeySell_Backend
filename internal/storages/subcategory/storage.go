@@ -19,21 +19,21 @@ func NewSubcategoryStorage(c *pgxpool.Pool) *SubcategoryStorage {
 	return &SubcategoryStorage{c: c}
 }
 
-func (c *SubcategoryStorage) IsComposite(ctx context.Context, SubCatID int) bool {
+func (c *SubcategoryStorage) IsComposite(ctx context.Context, SubCatID int) (bool, error) {
 	var IsComposite bool
 
 	query, args, err := squirrel.Select("is_composite").From(table).Where(squirrel.Eq{"id": SubCatID}).PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
 		logrus.Println(err)
-		return false
+		return false, err
 	}
 	row := c.c.QueryRow(ctx, query, args...)
 	err = row.Scan(&IsComposite)
 	if err != nil {
 		logrus.Printf("Scanning for Composite Error: %v", err)
-		return false
+		return false, err
 	}
-	return IsComposite
+	return IsComposite, nil
 }
 
 func (c *SubcategoryStorage) GetIDByValue(ctx context.Context, Value int) (int, error) {
