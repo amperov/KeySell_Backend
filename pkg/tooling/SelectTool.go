@@ -38,6 +38,7 @@ type ElementCount struct {
 
 func (t *Tool) SelectTool(ctx context.Context, SubcategoryID int) ([]map[string]interface{}, error) {
 	//Getting String with Available Slice
+	logrus.Println("Select Tool ЮХУ МЫ ЗДЕСЬ")
 	AvValuesString, TargetSum, err := t.SubcatStore.GetData(ctx, SubcategoryID)
 	if err != nil {
 		logrus.Printf("Step 1: %s", err.Error())
@@ -108,13 +109,14 @@ func (t *Tool) GetFullArray(ctx context.Context, Nominals []int) ([]int, error) 
 	for _, nominal := range Nominals {
 
 		SubCatID, err := t.SubcatStore.GetIDByValue(ctx, nominal)
-
 		if err != nil {
+			logrus.Printf("Get ID By Value Subcat: %v", err)
 			return nil, err
 		}
 
 		count, err := t.ProdStore.GetCount(ctx, SubCatID)
 		if err != nil {
+			logrus.Printf("Get Count Products: %v", err)
 			return nil, err
 		}
 
@@ -129,6 +131,7 @@ func stringToIntSlice(str string) []int {
 	for _, s := range strings.Split(str, ", ") {
 		i, err := strconv.Atoi(s)
 		if err != nil {
+			logrus.Printf("String To Slice: %v", err)
 			return nil
 		}
 		arr = append(arr, i)
