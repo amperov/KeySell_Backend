@@ -108,7 +108,7 @@ func (t *Tool) GetFullArray(ctx context.Context, Nominals []int) ([]int, error) 
 	var FullArr []int
 	logrus.Println("GetFullArray (Nominals Getted): ", Nominals)
 	for _, nominal := range Nominals {
-
+		logrus.Println("Get Full Array Searching: ", nominal)
 		SubCatID, err := t.SubcatStore.GetIDByValue(ctx, nominal)
 		if err != nil {
 			logrus.Printf("Get ID By Value Subcat: %v", err)
