@@ -76,6 +76,8 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 			return nil, err
 		}
 
+		logrus.Println(CategoryTitle, SubcategoryTitle)
+
 		CategoryID, Message, err := c.CategoryStore.GetIDByTitle(ctx, CategoryTitle)
 		if err != nil {
 			logrus.Println("Cat error: ", err)
