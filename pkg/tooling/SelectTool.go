@@ -63,6 +63,7 @@ func (t *Tool) SelectTool(ctx context.Context, SubcategoryID int) ([]map[string]
 		logrus.Printf("Step 4: %s", err.Error())
 		return nil, err
 	}
+	logrus.Println("Needing Array: ", NeedingArray)
 
 	CountsElements := countElements(NeedingArray)
 	logrus.Printf("Step 5 (CountElements): %v", CountsElements)
@@ -79,6 +80,7 @@ func (t *Tool) SelectTool(ctx context.Context, SubcategoryID int) ([]map[string]
 func (t *Tool) GetCompositeKeys(ctx context.Context, Array []ElementCount) ([]map[string]interface{}, error) {
 	var SubCounts []SubcatCounts
 
+	logrus.Printf("Get Composite Keys GOT Array: %v", Array)
 	//Getting SubCat IDS
 	for _, element := range Array {
 		var SubCount SubcatCounts
@@ -100,6 +102,11 @@ func (t *Tool) GetCompositeKeys(ctx context.Context, Array []ElementCount) ([]ma
 			logrus.Printf("Get For Client From SelectTool: %v", err)
 			return nil, err
 		}
+		if len(prods) == 0 {
+			logrus.Printf("Len of Prods: %v", value)
+			return nil, err
+		}
+		logrus.Println("Prods: ", prods)
 		for _, prod := range prods {
 			products = append(products, prod)
 		}
