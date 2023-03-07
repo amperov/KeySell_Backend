@@ -29,10 +29,13 @@ func (c *CreateSubcatInput) ToMap() map[string]interface{} {
 }
 
 type UpdateSubcatInput struct {
-	TitleRU   string `json:"title_ru,omitempty"`
-	TitleEng  string `json:"title_eng,omitempty"`
-	CatID     int    `json:"category_id,omitempty"`
-	SubItemID int    `json:"subitem_id,omitempty"`
+	TitleRU       string `json:"title_ru,omitempty"`
+	TitleEng      string `json:"title_eng,omitempty"`
+	SubtypeValue  int    `json:"subtype_value,omitempty"`
+	PartialValues string `json:"partial_values,omitempty"`
+	IsComposite   bool   `json:"is_composite,omitempty"`
+	CatID         int    `json:"category_id,omitempty"`
+	SubItemID     int    `json:"subitem_id,omitempty"`
 }
 
 func (c *UpdateSubcatInput) ToMap() map[string]interface{} {
@@ -46,6 +49,15 @@ func (c *UpdateSubcatInput) ToMap() map[string]interface{} {
 	}
 	if c.SubItemID != 0 {
 		m["subitem_id"] = c.SubItemID
+	}
+	if c.PartialValues != "" {
+		m["partial_values"] = c.TitleRU
+	}
+	if c.IsComposite != false {
+		m["is_composite"] = c.TitleEng
+	}
+	if c.SubtypeValue != 0 {
+		m["subtype_value"] = c.SubItemID
 	}
 	m["category_id"] = c.CatID
 	return m

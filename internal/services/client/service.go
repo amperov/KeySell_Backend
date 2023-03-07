@@ -2,6 +2,7 @@ package client
 
 import (
 	"KeySell/pkg"
+	"KeySell/pkg/tooling"
 	"context"
 	"github.com/sirupsen/logrus"
 )
@@ -23,6 +24,7 @@ type SellerStorage interface {
 
 type SubcategoryStore interface {
 	GetIDByTitle(ctx context.Context, Title string, CategoryID int) (int, error)
+	IsComposite(ctx context.Context, SubCatID int) bool
 }
 
 type CategoryStore interface {
@@ -41,6 +43,7 @@ type ClientService struct {
 	Digi          DigiClient
 	SubcatStore   SubcategoryStore
 	CategoryStore CategoryStore
+	Select        tooling.Tool
 }
 
 func NewClientService(prodStore ProductStorage, historyStore HistoryStorage, sellerStore SellerStorage, digi DigiClient, subcatStore SubcategoryStore, categoryStore CategoryStore) *ClientService {
@@ -88,10 +91,20 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 			return nil, err
 		}
 
-		ProdFromStore, err := c.ProdStore.GetForClient(ctx, SubcategoryID, Count)
-		if err != nil {
-			logrus.Println(err)
-			return nil, err
+		var ProdFromStore []map[string]interface{}
+		composite := c.SubcatStore.IsComposite(ctx, SubcategoryID)
+
+		if composite {
+			ProdFromStore, err = c.Select.SelectTool(ctx, SubcategoryID)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			ProdFromStore, err = c.ProdStore.GetForClient(ctx, SubcategoryID, Count)
+			if err != nil {
+				logrus.Println(err)
+				return nil, err
+			}
 		}
 
 		var content string
