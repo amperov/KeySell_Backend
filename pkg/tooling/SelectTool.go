@@ -106,6 +106,7 @@ func (t *Tool) GetCompositeKeys(ctx context.Context, Array []ElementCount) ([]ma
 
 func (t *Tool) GetFullArray(ctx context.Context, Nominals []int) ([]int, error) {
 	var FullArr []int
+	logrus.Println("GetFullArray (Nominals Getted): ", Nominals)
 	for _, nominal := range Nominals {
 
 		SubCatID, err := t.SubcatStore.GetIDByValue(ctx, nominal)
