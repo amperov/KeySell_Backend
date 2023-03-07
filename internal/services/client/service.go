@@ -66,31 +66,31 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 		// 2 Case: User not get products before
 		Token, err := c.Digi.Auth(ctx, SellerID, SellerKey)
 		if err != nil {
-			logrus.Println(err)
+			logrus.Println("DigiAuth error: ", err)
 			return nil, err
 		}
 
 		Count, CategoryTitle, SubcategoryTitle, MapForHistory, err := c.Digi.GetInfo(ctx, UniqueCode, Token)
 		if err != nil {
-			logrus.Println(err)
+			logrus.Println("GetInfo error", err)
 			return nil, err
 		}
 
 		CategoryID, Message, err := c.CategoryStore.GetIDByTitle(ctx, CategoryTitle)
 		if err != nil {
-			logrus.Println(err)
+			logrus.Println("Cat error: ", err)
 			return nil, err
 		}
 
 		SubcategoryID, err := c.SubcatStore.GetIDByTitle(ctx, SubcategoryTitle, CategoryID)
 		if err != nil {
-			logrus.Println(err)
+			logrus.Println("Subcat error: ", err)
 			return nil, err
 		}
 
 		ProdFromStore, err := c.ProdStore.GetForClient(ctx, SubcategoryID, Count)
 		if err != nil {
-			logrus.Println(err)
+			logrus.Println("Prods error: ", err)
 			return nil, err
 		}
 
