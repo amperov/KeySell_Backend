@@ -91,6 +91,7 @@ func (t *Tool) GetCompositeKeys(ctx context.Context, CountElements []ElementCoun
 		}
 		SubCount.Count = element.Count
 		SubCount.SubcatID = SubcatID
+		SubCounts = append(SubCounts, SubCount)
 	}
 
 	logrus.Printf("SubCounts: %v", SubCounts)
