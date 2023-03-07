@@ -100,7 +100,7 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 		}
 		logrus.Println("Composite: ", composite)
 		if composite {
-			ProdFromStore, err = c.Select.SelectTool(ctx, SubcategoryID)
+			ProdFromStore, err = c.Select.SelectTool(ctx, SubcategoryID, CategoryID)
 			if err != nil {
 				log.Println("SelectTool ", err)
 				return nil, err
@@ -124,6 +124,7 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 
 		MapForHistory["created_at"] = ProdFromStore[0]["created_at"]
 		MapForHistory["content_key"] = content
+
 		err = c.HistoryStore.SetTransaction(ctx, MapForHistory, UserID)
 		if err != nil {
 			logrus.Println(err)
@@ -136,7 +137,10 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 			}
 		}
 
-		return ProdFromStore, nil
+		ProdFromStore[0]["content_key"] = content
+		var NewMap []map[string]interface{}
+		NewMap = append(NewMap, ProdFromStore[0])
+		return NewMap, nil
 	}
 
 	return ProdFromTx, nil

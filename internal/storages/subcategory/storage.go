@@ -36,7 +36,7 @@ func (c *SubcategoryStorage) IsComposite(ctx context.Context, SubCatID int) (boo
 	return IsComposite, nil
 }
 
-func (c *SubcategoryStorage) GetIDByValue(ctx context.Context, Value int) (int, error) {
+func (c *SubcategoryStorage) GetIDByValue(ctx context.Context, Value, CategoryID int) (int, error) {
 	var SubCatID int
 	logrus.Println("Scanning from Get ID By Value")
 	query, args, err := squirrel.Select("id").Where(squirrel.Eq{"subtype_value": Value}).From(table).PlaceholderFormat(squirrel.Dollar).ToSql()
@@ -51,10 +51,11 @@ func (c *SubcategoryStorage) GetIDByValue(ctx context.Context, Value int) (int, 
 	}
 	return SubCatID, nil
 }
-func (c *SubcategoryStorage) GetData(ctx context.Context, SubcategoryID int) (string, int, error) {
+func (c *SubcategoryStorage) GetData(ctx context.Context, SubcategoryID, CategoryID int) (string, int, error) {
 	var AvailablePartialValues string
 	var TargetSum int
-	query, args, err := squirrel.Select("partial_values", "subtype_value").From(table).Where(squirrel.Eq{"id": SubcategoryID}).
+	query, args, err := squirrel.Select("partial_values", "subtype_value").From(table).
+		Where(squirrel.Eq{"id": SubcategoryID, "category_id": CategoryID}).
 		PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
 		return "", 0, err

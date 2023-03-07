@@ -12,6 +12,7 @@ func SendMessage(Message string, InvoiceID int, Token string) error {
 	Body := bytes.NewReader(bodyBytes)
 	Response, err := http.Post(fmt.Sprintf("https://api.digiseller.ru/api/debates/v2/?token=%s&id_i=%d", Token, InvoiceID), "application/json", Body)
 	if err != nil {
+
 		return err
 	}
 
