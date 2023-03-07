@@ -84,13 +84,16 @@ func (t *Tool) GetCompositeKeys(ctx context.Context, Array []ElementCount) ([]ma
 		var SubCount SubcatCounts
 		SubcatID, err := t.SubcatStore.GetIDByValue(ctx, element.Element)
 		if err != nil {
+			logrus.Printf("GetCompositeKeys: %v", err)
 			return nil, err
 		}
 		SubCount.Count = element.Count
 		SubCount.SubcatID = SubcatID
 	}
 
+	logrus.Printf("SubCounts: %v", SubCounts)
 	var products []map[string]interface{}
+
 	for _, value := range SubCounts {
 		prods, err := t.ProdStore.GetForClient(ctx, value.SubcatID, value.Count)
 		if err != nil {
@@ -106,7 +109,7 @@ func (t *Tool) GetCompositeKeys(ctx context.Context, Array []ElementCount) ([]ma
 
 func (t *Tool) GetFullArray(ctx context.Context, Nominals []int) ([]int, error) {
 	var FullArr []int
-	logrus.Println("GetFullArray (Nominals Getted): ", Nominals)
+	logrus.Println("GetFullArray (Nominals Got): ", Nominals)
 	for _, nominal := range Nominals {
 		logrus.Println("Get Full Array Searching: ", nominal)
 		SubCatID, err := t.SubcatStore.GetIDByValue(ctx, nominal)
@@ -114,13 +117,11 @@ func (t *Tool) GetFullArray(ctx context.Context, Nominals []int) ([]int, error) 
 			logrus.Printf("Get ID By Value Subcat: %v", err)
 			return nil, err
 		}
-
 		count, err := t.ProdStore.GetCount(ctx, SubCatID)
 		if err != nil {
 			logrus.Printf("Get Count Products: %v", err)
 			return nil, err
 		}
-
 		for i := 0; i < count; i++ {
 			FullArr = append(FullArr, nominal)
 		}

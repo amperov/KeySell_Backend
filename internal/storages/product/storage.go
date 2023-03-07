@@ -96,6 +96,7 @@ func (p *ProductStorage) GetCount(ctx context.Context, SubCatID int) (int, error
 	row := p.c.QueryRow(ctx, query, SubCatID)
 	err := row.Scan(&count)
 	if err != nil {
+		logrus.Println("GetCount: ", err)
 		return 0, err
 	}
 
