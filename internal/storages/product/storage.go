@@ -144,7 +144,7 @@ func (p *ProductStorage) DeleteOne(ctx context.Context, ProdID int) error {
 	}
 	return nil
 }
-func (p *ProductStorage) PreCheck(ctx context.Context, SubItemID int) (bool, error) {
+func (p *ProductStorage) PreCheck(ctx context.Context, SubItemID int) bool {
 	var exists bool
 
 	var id int
@@ -152,7 +152,7 @@ func (p *ProductStorage) PreCheck(ctx context.Context, SubItemID int) (bool, err
 	query, args, err := squirrel.Select("id", "title_ru").PlaceholderFormat(squirrel.Dollar).
 		Where(squirrel.Eq{"subitem_id": SubItemID}).From("subcategory").ToSql()
 	if err != nil {
-		return false, err
+		return false
 	}
 
 	row := p.c.QueryRow(ctx, query, args...)
@@ -160,13 +160,13 @@ func (p *ProductStorage) PreCheck(ctx context.Context, SubItemID int) (bool, err
 
 	if err != nil {
 		log.Println(err)
-		return false, err
+		return false
 	}
 
 	query, args, err = squirrel.Select("id").Prefix("SELECT EXISTS(").Suffix(")").From(prodTable).
 		Where(squirrel.Eq{"subcategory_id": id}).PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
-		return false, err
+		return false
 	}
 
 	row = p.c.QueryRow(ctx, query, args...)
@@ -174,7 +174,7 @@ func (p *ProductStorage) PreCheck(ctx context.Context, SubItemID int) (bool, err
 	err = row.Scan(&exists)
 	if err != nil {
 		log.Println("Scan prods err: ", err)
-		return false, err
+		return false
 	}
-	return exists, nil
+	return exists
 }

@@ -14,7 +14,7 @@ import (
 
 type ClientService interface {
 	Get(ctx context.Context, UniqueCode string, Username string) ([]map[string]interface{}, error)
-	Check(ctx context.Context, ItemID int) (bool, error)
+	Check(ctx context.Context, ItemID int) bool
 }
 
 type ClientHandlers struct {
@@ -99,11 +99,7 @@ func (h *ClientHandlers) PreCheck(w http.ResponseWriter, request *http.Request, 
 	}
 
 	logrus.Printf("SubItemID: %d", SubItemID)
-	check, err := h.c.Check(request.Context(), SubItemID)
-	if err != nil {
-		logrus.Printf("Check [ERROR]:", err)
-		return
-	}
+	check := h.c.Check(request.Context(), SubItemID)
 	if check == false {
 		w.WriteHeader(400)
 		w.Write([]byte(`{"error": "we haven't this products"}`))
