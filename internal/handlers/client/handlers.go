@@ -10,6 +10,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type ClientService interface {
@@ -68,7 +69,7 @@ type Request struct {
 	Options struct {
 		Text   string `xml:",chardata"`
 		Option []struct {
-			Text int    `xml:",chardata"`
+			Text string `xml:",chardata"`
 			ID   string `xml:"id,attr"`
 			Type string `xml:"type,attr"`
 		} `xml:"option"`
@@ -93,7 +94,11 @@ func (h *ClientHandlers) PreCheck(w http.ResponseWriter, request *http.Request, 
 
 	for _, option := range input.Options.Option {
 		if option.Type == "radio" {
-			SubItemID = option.Text
+			Sub, err := strconv.Atoi(option.Text)
+			if err != nil {
+				continue
+			}
+			SubItemID = Sub
 		}
 
 	}
