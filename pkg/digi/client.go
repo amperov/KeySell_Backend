@@ -40,13 +40,13 @@ func (c *DigiClient) Auth(ctx context.Context, SellerID int, SellerKey string) (
 	var body Body
 
 	var respStr Resp
-	//Searching SellerID by Username or integrate Seller Storage
 
 	body.SellerID = SellerID
 	body.Timestamp = time.Now().Unix()
 
 	hash := sha256.New()
 	hash.Write([]byte(SellerKey + strconv.Itoa(int(body.Timestamp))))
+
 	body.Sign = hex.EncodeToString(hash.Sum(nil))
 
 	BodyMarshalled, err := json.Marshal(body)

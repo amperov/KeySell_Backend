@@ -24,11 +24,13 @@ func (c *SubcategoryStorage) IsComposite(ctx context.Context, SubCatID int) bool
 
 	query, args, err := squirrel.Select("is_composite").From(table).Where(squirrel.Eq{"id": SubCatID}).PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
+		logrus.Println(err)
 		return false
 	}
 	row := c.c.QueryRow(ctx, query, args...)
 	err = row.Scan(&IsComposite)
 	if err != nil {
+		logrus.Printf("Scanning for Composite Error: %v", err)
 		return false
 	}
 	return IsComposite
