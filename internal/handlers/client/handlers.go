@@ -107,7 +107,7 @@ func (h *ClientHandlers) PreCheck(w http.ResponseWriter, request *http.Request, 
 	check := h.c.Check(request.Context(), SubItemID)
 	if check == false {
 		w.WriteHeader(400)
-		w.Write([]byte(`{"error": "we haven't this products"}`))
+		w.Write([]byte(`{"error": "У нас нет данного номинала в наличии, попробуйте выбрать другой или повторите попытку позже"}`))
 		logrus.Printf("Check [FALSE]: %v", err)
 		return
 	}
