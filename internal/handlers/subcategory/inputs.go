@@ -51,10 +51,10 @@ func (c *UpdateSubcatInput) ToMap() map[string]interface{} {
 		m["subitem_id"] = c.SubItemID
 	}
 	if c.PartialValues != "" {
-		m["partial_values"] = c.TitleRU
+		m["partial_values"] = c.PartialValues
 	}
 	if c.IsComposite != false {
-		m["is_composite"] = c.TitleEng
+		m["is_composite"] = c.IsComposite
 	}
 	if c.SubtypeValue != 0 {
 		m["subtype_value"] = c.SubItemID
