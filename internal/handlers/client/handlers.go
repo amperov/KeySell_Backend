@@ -14,7 +14,7 @@ import (
 
 type ClientService interface {
 	Get(ctx context.Context, UniqueCode string, Username string) ([]map[string]interface{}, error)
-	Check(ctx context.Context, ItemID int) bool
+	Check(ctx context.Context, ItemID int) (bool, error)
 }
 
 type ClientHandlers struct {
@@ -99,7 +99,13 @@ func (h *ClientHandlers) PreCheck(w http.ResponseWriter, request *http.Request, 
 	}
 
 	logrus.Printf("SubItemID: %d", SubItemID)
-	check := h.c.Check(request.Context(), SubItemID)
+	check, err := h.c.Check(request.Context(), SubItemID)
+	if err == nil {
+		w.WriteHeader(400)
+		w.Write([]byte(`{"error": "Ошибка"}`))
+		logrus.Printf("Check [ERROR]: %v", err)
+		return
+	}
 	if check == false {
 		w.WriteHeader(400)
 		w.Write([]byte(`{"error": "У нас нет данного номинала в наличии, попробуйте выбрать другой или повторите попытку позже"}`))

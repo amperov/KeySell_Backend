@@ -32,7 +32,7 @@ type CategoryStore interface {
 type ProductStorage interface {
 	DeleteOne(ctx context.Context, ProdID int) error
 	GetForClient(ctx context.Context, SubcategoryID, Count int) ([]map[string]interface{}, error)
-	PreCheck(ctx context.Context, SubItemID int) bool
+	PreCheck(ctx context.Context, SubItemID int) (bool, error)
 }
 type ClientService struct {
 	ProdStore     ProductStorage
@@ -125,6 +125,6 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 	return ProdFromTx, nil
 }
 
-func (c *ClientService) Check(ctx context.Context, SubItemID int) bool {
+func (c *ClientService) Check(ctx context.Context, SubItemID int) (bool, error) {
 	return c.ProdStore.PreCheck(ctx, SubItemID)
 }
