@@ -39,7 +39,7 @@ func (c *SubcategoryStorage) IsComposite(ctx context.Context, SubCatID int) (boo
 func (c *SubcategoryStorage) GetIDByValue(ctx context.Context, Value, CategoryID int) (int, error) {
 	var SubCatID int
 	logrus.Println("Scanning from Get ID By Value")
-	query, args, err := squirrel.Select("id").Where(squirrel.Eq{"subtype_value": Value}).From(table).PlaceholderFormat(squirrel.Dollar).ToSql()
+	query, args, err := squirrel.Select("id").Where(squirrel.Eq{"subtype_value": Value, "is_composite": false, "category_id": CategoryID}).From(table).PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
 		return 0, err
 	}

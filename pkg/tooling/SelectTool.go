@@ -10,7 +10,7 @@ import (
 )
 
 type ProdStore interface {
-	GetCount(ctx context.Context, nominal int) (int, error)
+	GetCountForSelectTool(ctx context.Context, nominal int) (int, error)
 	GetForClient(ctx context.Context, SubcatID, Count int) ([]map[string]interface{}, error)
 }
 type SubcatStore interface {
@@ -125,7 +125,7 @@ func (t *Tool) GetFullArray(ctx context.Context, Nominals []int, CategoryID int)
 			logrus.Printf("Get ID By Value Subcat: %v", err)
 			return nil, err
 		}
-		count, err := t.ProdStore.GetCount(ctx, SubCatID)
+		count, err := t.ProdStore.GetCountForSelectTool(ctx, SubCatID)
 		if err != nil {
 			logrus.Printf("Get Count Products: %v", err)
 			return nil, err

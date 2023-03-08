@@ -102,13 +102,26 @@ func (p *ProductStorage) GetCount(ctx context.Context, SubCatID int) (int, error
 
 	return count, nil
 }
+func (p *ProductStorage) GetCountForSelectTool(ctx context.Context, SubCatID int) (int, error) {
+	var count int
+	query := fmt.Sprintf("SELECT count(id) FROM %s WHERE subcategory_id=$1 AND is_composite=$2", prodTable)
+
+	row := p.c.QueryRow(ctx, query, SubCatID, false)
+	err := row.Scan(&count)
+	if err != nil {
+		logrus.Println("GetCountForSelectTool: ", err)
+		return 0, err
+	}
+
+	return count, nil
+}
 
 func (p *ProductStorage) GetForClient(ctx context.Context, SubcatID, Count int) ([]map[string]interface{}, error) {
 	var m []map[string]interface{}
 	var i ProdForClient
 
 	query, args, err := squirrel.Select("content_key", "id", "created_at").PlaceholderFormat(squirrel.Dollar).From(prodTable).
-		Where(squirrel.Eq{"subcategory_id": SubcatID}).Suffix(fmt.Sprintf("LIMIT %d", Count)).ToSql()
+		Where(squirrel.Eq{"subcategory_id": SubcatID, "is_composite": false}).Suffix(fmt.Sprintf("LIMIT %d", Count)).ToSql()
 	if err != nil {
 		logrus.Println(err)
 		return nil, err
