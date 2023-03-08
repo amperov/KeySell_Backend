@@ -6,7 +6,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
-	"github.com/sirupsen/logrus"
 	"io"
 	"log"
 	"net/http"
@@ -83,6 +82,8 @@ func (h *ClientHandlers) PreCheck(w http.ResponseWriter, request *http.Request, 
 		return
 	}
 
+	log.Println(string(all))
+
 	err = xml.Unmarshal(all, &input)
 	if err != nil {
 		return
@@ -98,18 +99,16 @@ func (h *ClientHandlers) PreCheck(w http.ResponseWriter, request *http.Request, 
 
 	}
 
-	logrus.Printf("SubItemID: %d", SubItemID)
 	check, err := h.c.Check(request.Context(), SubItemID)
-	if err == nil {
-		w.WriteHeader(400)
-		w.Write([]byte(`{"error": "Ошибка"}`))
-		logrus.Printf("Check [ERROR]: %v", err)
+	if err != nil {
+		log.Print(err)
 		return
 	}
+	log.Println(check)
 	if check == false {
 		w.WriteHeader(400)
-		w.Write([]byte(`{"error": "У нас нет данного номинала в наличии, попробуйте выбрать другой или повторите попытку позже"}`))
-		logrus.Printf("Check [FALSE]: %v", err)
+		w.Write([]byte(`"error": "we haven't this products"`))
+		log.Println(err)
 		return
 	}
 	w.Write([]byte(`{"error": ""}`))
