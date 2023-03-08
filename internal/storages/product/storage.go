@@ -107,7 +107,7 @@ func (p *ProductStorage) GetCountForSelectTool(ctx context.Context, SubCatID int
 	var count int
 	query := fmt.Sprintf("SELECT count(id) FROM %s WHERE subcategory_id=$1", prodTable)
 
-	row := p.c.QueryRow(ctx, query, SubCatID, false)
+	row := p.c.QueryRow(ctx, query, SubCatID)
 	err := row.Scan(&count)
 	if err != nil {
 		logrus.Println("GetCountForSelectTool: ", err)
