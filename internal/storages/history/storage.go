@@ -111,7 +111,7 @@ func (h *HistoryStorage) GetByUC(ctx context.Context, UniqueCode string, UserID 
 
 	err = row.Scan(&transtact.ID, &transtact.Category, &transtact.Subcategory, &transtact.ClientEmail,
 		&transtact.Amount, &transtact.Profit, &transtact.CountGoods, &transtact.UniqueInv, &transtact.UniqueCode.DateDelivery, &transtact.UniqueCode.DateConfirmed, &transtact.Content,
-		&transtact.UniqueCode.State, &transtact.AmountUSD, &transtact.DateCheck)
+		&transtact.UniqueCode.State, &transtact.AmountUSD, &transtact.UniqueCode.DateCheck)
 	if err != nil {
 		logrus.Debugf("error scanning: %v", err)
 		return nil, err
