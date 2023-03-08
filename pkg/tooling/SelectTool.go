@@ -3,6 +3,7 @@ package tooling
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"sort"
 	"strconv"
@@ -14,6 +15,7 @@ type ProdStore interface {
 	GetForClient(ctx context.Context, SubcatID, Count int) ([]map[string]interface{}, error)
 }
 type SubcatStore interface {
+	GetValueByID(ctx context.Context, SubcategoryID int) (int, error)
 	GetData(ctx context.Context, SubcategoryID, CategoryID int) (string, int, error)
 	GetIDByValue(ctx context.Context, Value int, CategoryID int, IsComposite bool) (int, error)
 }
@@ -78,6 +80,37 @@ func (t *Tool) SelectTool(ctx context.Context, SubcategoryID int, CategoryID int
 	logrus.Printf("Step 6 (Get Products): %v", prods)
 	return prods, nil
 }
+func (t *Tool) SelectToolCheck(ctx context.Context, SubcategoryID int, CategoryID int) (bool, error) {
+	//Getting String with Available Slice
+	logrus.Println("Select Tool ЮХУ МЫ ЗДЕСЬ")
+	AvValuesString, TargetSum, err := t.SubcatStore.GetData(ctx, SubcategoryID, CategoryID)
+	if err != nil {
+		logrus.Printf("Step 1: %s", err.Error())
+		return false, err
+	}
+	logrus.Printf("Step 1: %s, %d", AvValuesString, TargetSum)
+
+	// String to Slice with Available Nominals
+	NominalSlice := stringToIntSlice(AvValuesString)
+	logrus.Printf("Step 2 (Slice Nominals): %v", NominalSlice)
+
+	// Getting Full Array by selecting counts from DB
+	FullNotSortedArray, err := t.GetFullArray(ctx, NominalSlice, CategoryID)
+	if err != nil {
+		logrus.Printf("Step 3 (Full Array): %v", err)
+		return false, err
+	}
+
+	logrus.Printf("Step 3 (Full Array): %v", FullNotSortedArray)
+
+	_, err = minimumSumArray(FullNotSortedArray, TargetSum)
+	if err != nil {
+		logrus.Printf("Step 4: %s", err.Error())
+		return false, err
+	}
+
+	return true, nil
+}
 
 func (t *Tool) GetCompositeKeys(ctx context.Context, CountElements []ElementCount, CategoryID int) ([]map[string]interface{}, error) {
 	var SubCounts []SubcatCounts
@@ -105,12 +138,18 @@ func (t *Tool) GetCompositeKeys(ctx context.Context, CountElements []ElementCoun
 			logrus.Printf("Get For Client From SelectTool: %v", err)
 			return nil, err
 		}
+
 		if len(prods) == 0 {
 			logrus.Printf("Len of Prods: %v", value)
 			return nil, err
 		}
 		logrus.Println("Prods: ", prods)
 		for _, prod := range prods {
+			ValueOfProd, err := t.SubcatStore.GetValueByID(ctx, prod["subcategory_id"].(int))
+			if err != nil {
+				return nil, err
+			}
+			prod["content_key"] = fmt.Sprintf("%d: %s", ValueOfProd, prod["content_key"].(string))
 			products = append(products, prod)
 		}
 	}

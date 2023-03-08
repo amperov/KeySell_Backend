@@ -207,3 +207,17 @@ func (c *SubcategoryStorage) GetIDByTitle(ctx context.Context, Title string, Cat
 	}
 	return id, nil
 }
+
+func (c *SubcategoryStorage) GetValueByID(ctx context.Context, SubcategoryID int) (int, error) {
+	var id int
+	query := "SELECT subtype_value FROM subcategory WHERE (id=$1)"
+
+	row := c.c.QueryRow(ctx, query, SubcategoryID)
+
+	err := row.Scan(&id)
+	if err != nil {
+		logrus.Debugf("Subcat error: %v", err)
+		return 0, err
+	}
+	return id, nil
+}

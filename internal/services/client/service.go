@@ -115,6 +115,7 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 
 		var content string
 		for _, prod := range ProdFromStore {
+			prod["client_email"] = MapForHistory["client_email"]
 			prod["unique_code"] = MapForHistory["unique_code"]
 			prod["unique_inv"] = MapForHistory["unique_inv"]
 			content += prod["content_key"].(string) + "\n"
