@@ -67,7 +67,8 @@ func (p *ProductStorage) Delete(ctx context.Context, ProdID int) error {
 func (p *ProductStorage) GetAll(ctx context.Context, CatID, SubCatID int) ([]map[string]interface{}, error) {
 	var m []map[string]interface{}
 	var i ProdForClient
-	query, args, err := squirrel.Select("id", "content_key", "created_at").From(prodTable).Where(squirrel.Eq{"subcategory_id": SubCatID}).PlaceholderFormat(squirrel.Dollar).ToSql()
+	query, args, err := squirrel.Select("id", "content_key", "created_at").From(prodTable).
+		Where(squirrel.Eq{"subcategory_id": SubCatID}).PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -104,7 +105,7 @@ func (p *ProductStorage) GetCount(ctx context.Context, SubCatID int) (int, error
 }
 func (p *ProductStorage) GetCountForSelectTool(ctx context.Context, SubCatID int) (int, error) {
 	var count int
-	query := fmt.Sprintf("SELECT count(id) FROM %s WHERE subcategory_id=$1 AND is_composite=$2", prodTable)
+	query := fmt.Sprintf("SELECT count(id) FROM %s WHERE subcategory_id=$1", prodTable)
 
 	row := p.c.QueryRow(ctx, query, SubCatID, false)
 	err := row.Scan(&count)
@@ -121,7 +122,7 @@ func (p *ProductStorage) GetForClient(ctx context.Context, SubcatID, Count int) 
 	var i ProdForClient
 
 	query, args, err := squirrel.Select("content_key", "id", "created_at").PlaceholderFormat(squirrel.Dollar).From(prodTable).
-		Where(squirrel.Eq{"subcategory_id": SubcatID, "is_composite": false}).Suffix(fmt.Sprintf("LIMIT %d", Count)).ToSql()
+		Where(squirrel.Eq{"subcategory_id": SubcatID}).Suffix(fmt.Sprintf("LIMIT %d", Count)).ToSql()
 	if err != nil {
 		logrus.Println(err)
 		return nil, err
