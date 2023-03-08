@@ -137,9 +137,8 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 			}
 		}
 
-		ProdFromStore[0]["content_key"] = content
 		var NewMap []map[string]interface{}
-		NewMap = append(NewMap, ProdFromStore[0])
+		NewMap = append(NewMap, MapForHistory)
 		return NewMap, nil
 	}
 
