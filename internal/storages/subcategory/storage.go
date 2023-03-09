@@ -15,6 +15,55 @@ type SubcategoryStorage struct {
 	c *pgxpool.Pool
 }
 
+func (c *SubcategoryStorage) GetIDBySubItem(ctx context.Context, SubItemID int) (int, error) {
+	var SubCatID int
+	logrus.Println("Scanning from Get ID By Value")
+	query, args, err := squirrel.Select("id").Where(squirrel.Eq{"subitem_id": SubItemID}).From(table).PlaceholderFormat(squirrel.Dollar).ToSql()
+	if err != nil {
+		return 0, err
+	}
+	row := c.c.QueryRow(ctx, query, args...)
+	err = row.Scan(&SubCatID)
+	if err != nil {
+		logrus.Printf("Scanning from Get ID By Value: %v", err)
+		return 0, err
+	}
+	return SubCatID, nil
+}
+
+func (c *SubcategoryStorage) GetCatIDByID(ctx context.Context, SubItemID int) (int, error) {
+	var SubCatID int
+	logrus.Println("Scanning from Get ID By Value")
+	query, args, err := squirrel.Select("category_id").Where(squirrel.Eq{"subitem_id": SubItemID}).From(table).PlaceholderFormat(squirrel.Dollar).ToSql()
+	if err != nil {
+		return 0, err
+	}
+	row := c.c.QueryRow(ctx, query, args...)
+	err = row.Scan(&SubCatID)
+	if err != nil {
+		logrus.Printf("Scanning from Get ID By Value: %v", err)
+		return 0, err
+	}
+	return SubCatID, nil
+}
+
+func (c *SubcategoryStorage) PrecheckIsComposite(ctx context.Context, SubCatID int) (bool, error) {
+	var IsComposite bool
+
+	query, args, err := squirrel.Select("is_composite").From(table).Where(squirrel.Eq{"subitem_id": SubCatID}).PlaceholderFormat(squirrel.Dollar).ToSql()
+	if err != nil {
+		logrus.Println(err)
+		return false, err
+	}
+	row := c.c.QueryRow(ctx, query, args...)
+	err = row.Scan(&IsComposite)
+	if err != nil {
+		logrus.Printf("Scanning for Composite Error: %v", err)
+		return false, err
+	}
+	return IsComposite, nil
+}
+
 func NewSubcategoryStorage(c *pgxpool.Pool) *SubcategoryStorage {
 	return &SubcategoryStorage{c: c}
 }

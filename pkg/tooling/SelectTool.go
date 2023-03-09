@@ -82,7 +82,7 @@ func (t *Tool) SelectTool(ctx context.Context, SubcategoryID int, CategoryID int
 }
 func (t *Tool) SelectToolCheck(ctx context.Context, SubcategoryID int, CategoryID int) (bool, error) {
 	//Getting String with Available Slice
-	logrus.Println("Select Tool ЮХУ МЫ ЗДЕСЬ")
+	logrus.Println("Select Tool Checking for SubCatID: ", SubcategoryID, " and CategoryID: ", CategoryID)
 	AvValuesString, TargetSum, err := t.SubcatStore.GetData(ctx, SubcategoryID, CategoryID)
 	if err != nil {
 		logrus.Printf("Step 1: %s", err.Error())

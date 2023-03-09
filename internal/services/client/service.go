@@ -25,7 +25,10 @@ type SellerStorage interface {
 
 type SubcategoryStore interface {
 	GetIDByTitle(ctx context.Context, Title string, CategoryID int) (int, error)
+	GetIDBySubItem(ctx context.Context, SubItemID int) (int, error)
+	GetCatIDByID(ctx context.Context, SubItemID int) (int, error)
 	IsComposite(ctx context.Context, SubCatID int) (bool, error)
+	PrecheckIsComposite(ctx context.Context, SubCatID int) (bool, error)
 }
 
 type CategoryStore interface {
@@ -147,5 +150,28 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 }
 
 func (c *ClientService) Check(ctx context.Context, SubItemID int) bool {
-	return c.ProdStore.PreCheck(ctx, SubItemID)
+	IsComposite, err := c.SubcatStore.PrecheckIsComposite(ctx, SubItemID)
+	if err != nil {
+		return false
+	}
+	ID, err := c.SubcatStore.GetIDBySubItem(ctx, SubItemID)
+	if err != nil {
+		return false
+	}
+	CatID, err := c.SubcatStore.GetCatIDByID(ctx, ID)
+	if err != nil {
+		return false
+	}
+
+	var check bool
+	if IsComposite {
+		check, err = c.Select.SelectToolCheck(ctx, ID, CatID)
+		if err != nil {
+			return false
+		}
+		return check
+	} else {
+		check = c.ProdStore.PreCheck(ctx, SubItemID)
+	}
+	return check
 }
