@@ -1,5 +1,6 @@
 package main
 
+/*
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/sirupsen/logrus"
@@ -190,7 +191,8 @@ func main() {
 	}
 	fmt.Printf("Second Input: %+v", Input)
 	s := reflect.Struct.String()
-	logrus.Println(s)*/
+	logrus.Println(s)
 	logrus.Println(govalidator.IsEmail("Aoaoaoao"))
 	logrus.Println(govalidator.IsExistingEmail("unflat.gopher@gl.com"))
 }
+*/
