@@ -103,11 +103,13 @@ func (t *Tool) SelectToolCheck(ctx context.Context, SubcategoryID int, CategoryI
 
 	logrus.Printf("Step 3 (Full Array): %v", FullNotSortedArray)
 
-	_, err = minimumSumArray(FullNotSortedArray, TargetSum)
+	Arr, err := minimumSumArray(FullNotSortedArray, TargetSum)
 	if err != nil {
 		logrus.Printf("Step 4: %s", err.Error())
 		return false, err
 	}
+
+	logrus.Printf("Needing Array: %v", Arr)
 
 	return true, nil
 }
