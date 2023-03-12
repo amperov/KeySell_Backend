@@ -1,5 +1,6 @@
 package main
 
+/*
 import (
 	category3 "KeySell/internal/handlers/category"
 	client2 "KeySell/internal/handlers/client"
@@ -112,3 +113,4 @@ func Init() error {
 	viper.SetConfigName("config")
 	return viper.ReadInConfig()
 }
+*/

@@ -150,16 +150,21 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 }
 
 func (c *ClientService) Check(ctx context.Context, SubItemID int) bool {
-	IsComposite, err := c.SubcatStore.PrecheckIsComposite(ctx, SubItemID)
-	if err != nil {
-		return false
-	}
 	ID, err := c.SubcatStore.GetIDBySubItem(ctx, SubItemID)
 	if err != nil {
+		logrus.Printf("Get ID By SubItemID: %v", err)
 		return false
 	}
+
+	IsComposite, err := c.SubcatStore.PrecheckIsComposite(ctx, SubItemID)
+	if err != nil {
+		logrus.Printf("Checking for Composite: %v", err)
+		return false
+	}
+	logrus.Println("Is Composite: ", IsComposite)
 	CatID, err := c.SubcatStore.GetCatIDByID(ctx, ID)
 	if err != nil {
+		logrus.Printf("Get CatID by SubCatID: %v", err)
 		return false
 	}
 
@@ -167,10 +172,11 @@ func (c *ClientService) Check(ctx context.Context, SubItemID int) bool {
 	if IsComposite {
 		check, err = c.Select.SelectToolCheck(ctx, ID, CatID)
 		if err != nil {
+			logrus.Printf("Select Tool Error: %v", err)
 			return false
 		}
 		return check
-	} else {
+	} else if !IsComposite {
 		check = c.ProdStore.PreCheck(ctx, SubItemID)
 	}
 	return check

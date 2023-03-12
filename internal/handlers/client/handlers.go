@@ -18,6 +18,9 @@ type ClientService interface {
 	Check(ctx context.Context, ItemID int) bool
 }
 
+type SubcatStore interface {
+}
+
 type ClientHandlers struct {
 	c ClientService
 }
@@ -108,7 +111,7 @@ func (h *ClientHandlers) PreCheck(w http.ResponseWriter, request *http.Request, 
 	if check == false {
 		w.WriteHeader(400)
 		w.Write([]byte(`{"error": "У нас нет данного номинала в наличии, попробуйте выбрать другой или повторите попытку позже"}`))
-		logrus.Printf("Check [FALSE]: %v", err)
+		logrus.Printf("Check [FALSE]")
 		return
 	}
 	w.Write([]byte(`{"error": ""}`))
