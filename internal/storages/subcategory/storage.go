@@ -31,17 +31,16 @@ func (c *SubcategoryStorage) GetIDBySubItem(ctx context.Context, SubItemID int) 
 	return SubCatID, nil
 }
 
-func (c *SubcategoryStorage) GetCatIDByID(ctx context.Context, SubItemID int) (int, error) {
+func (c *SubcategoryStorage) GetCatIDByID(ctx context.Context, CatID int) (int, error) {
 	var SubCatID int
 	logrus.Println("Scanning from Get ID By Value")
-	query, args, err := squirrel.Select("category_id").Where(squirrel.Eq{"subitem_id": SubItemID}).From(table).PlaceholderFormat(squirrel.Dollar).ToSql()
-	if err != nil {
-		return 0, err
-	}
+	query, args, err := squirrel.Select("category_id").Where(squirrel.Eq{"id": CatID}).From(table).PlaceholderFormat(squirrel.Dollar).ToSql()
+
 	row := c.c.QueryRow(ctx, query, args...)
+
 	err = row.Scan(&SubCatID)
 	if err != nil {
-		logrus.Printf("Scanning from Get ID By Value: %v", err)
+		logrus.Printf("[ERROR] Scanning: %v", err)
 		return 0, err
 	}
 	return SubCatID, nil

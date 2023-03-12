@@ -162,6 +162,7 @@ func (c *ClientService) Check(ctx context.Context, SubItemID int) bool {
 		return false
 	}
 	logrus.Println("Is Composite: ", IsComposite)
+
 	CatID, err := c.SubcatStore.GetCatIDByID(ctx, ID)
 	if err != nil {
 		logrus.Printf("Get CatID by SubCatID: %v", err)
