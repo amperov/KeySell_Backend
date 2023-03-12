@@ -56,6 +56,7 @@ func NewClientService(prodStore ProductStorage, historyStore HistoryStorage, sel
 
 func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username string) ([]map[string]interface{}, error) {
 	//Getting UserID By Username
+	logrus.Println("We are in Get Prods")
 	UserID, err := c.SellerStore.GetIDByUsername(ctx, Username)
 	if err != nil {
 		return nil, err
@@ -76,13 +77,14 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 			logrus.Println("DigiAuth: ", err)
 			return nil, err
 		}
-
+		logrus.Println("Token: ", Token)
 		Count, CategoryTitle, SubcategoryTitle, MapForHistory, err := c.Digi.GetInfo(ctx, UniqueCode, Token)
 		if err != nil {
 			logrus.Println("GetInfo", err)
 			return nil, err
 		}
 
+		logrus.Printf("%+v", MapForHistory)
 		CategoryID, Message, err := c.CategoryStore.GetIDByTitle(ctx, CategoryTitle)
 		if err != nil {
 			logrus.Println("Get CatID By TITLE: ", err)
