@@ -110,6 +110,7 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 			MapForHistory["content_key"] = content
 		} else {
 			MapForHistory["content_key"] = "Скоро ваш ключ будет загружен, ожидайте"
+			MapForHistory["created_at"] = "Отсутствует"
 			pkg.SendMessage("Приносим свои извинения, ключ в ближайшее время будет загружен, ожидайте!", MapForHistory["unique_inv"].(int), Token)
 		}
 
