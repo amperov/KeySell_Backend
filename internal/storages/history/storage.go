@@ -53,7 +53,7 @@ func (h *HistoryStorage) GetAllTransactions(ctx context.Context, UserID int) (ma
 
 	for rows.Next() {
 		err := rows.Scan(&transacts.ID, &transacts.Category, &transacts.Subcategory, &transacts.UniqueCode,
-			&transacts.Content, &transacts.State, &transacts.AmountUSD, &transacts.DateCheck, &transacts.ClientEmail, &transacts.UniqueInv, &transacts.CreatedAt)
+			&transacts.Content, &transacts.State, &transacts.AmountUSD, &transacts.DateCheck, &transacts.ClientEmail, &transacts.UniqueInv)
 		if err != nil {
 			logrus.Debugf("error scanning: %v", err)
 			return nil, err
