@@ -36,7 +36,7 @@ func (h *HistoryStorage) GetAllTransactions(ctx context.Context, UserID int) (ma
 
 	query, args, err := squirrel.
 		Select("id", "category_name", "subcategory_name", "unique_code",
-			"content_key", "state", "amount", "date_check", "client_email", "unique_inv", "created_at").
+			"content_key", "state", "amount", "date_check", "client_email", "unique_inv").
 		From(table).Where(squirrel.Eq{"user_id": UserID}).
 		PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
