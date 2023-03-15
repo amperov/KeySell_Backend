@@ -93,20 +93,26 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 		ProdFromStore, err := c.ProdStore.GetForClient(ctx, SubcategoryID, Count)
 		if err != nil {
 			logrus.Println("Prods error: ", err)
-			return nil, err
 		}
 
 		var content string
-		for _, prod := range ProdFromStore {
-			prod["unique_code"] = MapForHistory["unique_code"]
-			prod["unique_inv"] = MapForHistory["unique_inv"]
-			content += prod["content_key"].(string) + " \n "
+
+		if ProdFromStore != nil {
+			for _, prod := range ProdFromStore {
+				prod["unique_code"] = MapForHistory["unique_code"]
+				prod["unique_inv"] = MapForHistory["unique_inv"]
+
+				content += prod["content_key"].(string) + "\n"
+			}
+			pkg.SendMessage(Message, MapForHistory["unique_inv"].(int), Token)
+
+			MapForHistory["created_at"] = ProdFromStore[0]["created_at"]
+			MapForHistory["content_key"] = content
+		} else {
+			MapForHistory["content_key"] = "Скоро ваш ключ будет загружен, ожидайте"
+			pkg.SendMessage("Приносим свои извинения, ключ в ближайшее время будет загружен, ожидайте!", MapForHistory["unique_inv"].(int), Token)
 		}
 
-		pkg.SendMessage(Message, MapForHistory["unique_inv"].(int), Token)
-
-		MapForHistory["created_at"] = ProdFromStore[0]["created_at"]
-		MapForHistory["content_key"] = content
 		err = c.HistoryStore.SetTransaction(ctx, MapForHistory, UserID)
 		if err != nil {
 			logrus.Println(err)
