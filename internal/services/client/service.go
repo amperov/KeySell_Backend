@@ -3,7 +3,10 @@ package client
 import (
 	"KeySell/pkg"
 	"context"
+	"encoding/json"
+	"fmt"
 	"github.com/sirupsen/logrus"
+	"github.com/tidwall/pretty"
 )
 
 type DigiClient interface {
@@ -76,7 +79,11 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 			return nil, err
 		}
 
-		logrus.Println(CategoryTitle, SubcategoryTitle)
+		marshal, err := json.Marshal(MapForHistory)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Printf("%s", string(pretty.Pretty(marshal)))
 
 		CategoryID, Message, err := c.CategoryStore.GetIDByTitle(ctx, CategoryTitle)
 		if err != nil {
