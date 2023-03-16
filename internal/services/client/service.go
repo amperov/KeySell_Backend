@@ -111,7 +111,8 @@ func (c *ClientService) Get(ctx context.Context, UniqueCode string, Username str
 		} else {
 			MapForHistory["content_key"] = "Скоро ваш ключ будет загружен, ожидайте"
 			MapForHistory["created_at"] = "Отсутствует"
-			pkg.SendMessage("Приносим свои извинения, ключ в ближайшее время будет загружен, ожидайте!", MapForHistory["unique_inv"].(int), Token)
+			pkg.SendMessage("Данного товара сейчас нет в наличии, попробуйте обновить эту страницу "+
+				"через 5-10 минут\nЕсли ключ по прежнему не отображается, свяжитесь с продавцом.\n\nThis product is currently out of stock, please try refreshing this page in 5-10 minutes\nIf the key is still not displayed, contact the seller.", MapForHistory["unique_inv"].(int), Token)
 		}
 
 		err = c.HistoryStore.SetTransaction(ctx, MapForHistory, UserID)

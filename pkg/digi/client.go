@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/sirupsen/logrus"
+	"github.com/tidwall/pretty"
 	"io"
 	"log"
 	"net/http"
@@ -67,6 +68,7 @@ func (c *DigiClient) Auth(ctx context.Context, SellerID int, SellerKey string) (
 		logrus.Debugf("ReadAll error: %v", err)
 		return "", err
 	}
+	logrus.Printf("Response from Digiseller: %s\n", string(pretty.Pretty(respBody)))
 
 	err = json.Unmarshal(respBody, &respStr)
 	if err != nil {
