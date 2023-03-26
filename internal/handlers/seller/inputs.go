@@ -3,6 +3,7 @@ package seller
 type SignUpInput struct {
 	Username  string `json:"username,omitempty"`
 	Password  string `json:"password,omitempty"`
+	Email     string `json:"email,omitempty"`
 	SellerID  int    `json:"seller_id,omitempty"`
 	SellerKey string `json:"seller_key,omitempty"`
 }
@@ -16,6 +17,9 @@ func (m SignUpInput) ToMap() map[string]interface{} {
 	}
 	if m.Password != "" {
 		SellerMap["pass"] = m.Password
+	}
+	if m.Email != "" {
+		SellerMap["email"] = m.Email
 	}
 	if m.SellerID != 0 {
 		SellerMap["seller_id"] = m.SellerID
@@ -47,11 +51,15 @@ type UpdateInput struct {
 	Password  string `json:"password,omitempty"`
 	SellerID  int    `json:"seller_id,omitempty"`
 	SellerKey string `json:"seller_key,omitempty"`
+	Email     string `json:"email,omitempty"`
 }
 
 func (m *UpdateInput) ToMap() map[string]interface{} {
 	var SellerMap = make(map[string]interface{})
 
+	if m.Email != "" {
+		SellerMap["email"] = m.Email
+	}
 	if m.Password != "" {
 		SellerMap["password"] = m.Password
 	}

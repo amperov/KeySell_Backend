@@ -2,6 +2,8 @@ package seller
 
 import (
 	"KeySell/pkg/auth"
+	"KeySell/pkg/gen"
+	"KeySell/pkg/mailer"
 	"KeySell/pkg/tooling"
 	"context"
 	"encoding/json"
@@ -22,11 +24,13 @@ type Service interface {
 
 type SellerHandler struct {
 	ware auth.MiddleWare
+	g    gen.Gen
 	s    Service
+	m    mailer.Mailer
 }
 
-func NewSellerHandler(ware auth.MiddleWare, s Service) *SellerHandler {
-	return &SellerHandler{ware: ware, s: s}
+func NewSellerHandler(ware auth.MiddleWare, s Service, mailer2 mailer.Mailer, gen2 gen.Gen) *SellerHandler {
+	return &SellerHandler{ware: ware, s: s, g: gen2, m: mailer2}
 }
 
 func (s *SellerHandler) Register(r *httprouter.Router) {
@@ -35,6 +39,7 @@ func (s *SellerHandler) Register(r *httprouter.Router) {
 	r.PATCH("/api/seller/update", s.ware.IsAuth(s.UpdateData))
 	r.GET("/api/seller/info", s.ware.IsAuth(s.GetInfo))
 	r.GET("/api/seller/me", s.ware.IsAuth(s.IsAuth))
+	r.GET("/api/seller/recover", s.ware.IsAuth(s.RecoverPassword))
 }
 
 func (s *SellerHandler) CreateUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -136,4 +141,29 @@ func (s *SellerHandler) IsAuth(w http.ResponseWriter, r *http.Request, params ht
 		return
 	}
 	w.WriteHeader(200)
+}
+
+func (s *SellerHandler) RecoverPassword(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	w.Header().Add("Content-Type", "application/json")
+
+	UserID := r.Context().Value("user_id").(int)
+
+	NewPassword := s.g.Generate()
+
+	info, err := s.s.GetInfo(r.Context(), UserID)
+	if err != nil {
+		logrus.Errorln("Get Info: ", err)
+		return
+	}
+
+	var UpdateInput UpdateInput
+	UpdateInput.Password = NewPassword
+
+	err = s.s.UpdateData(r.Context(), UpdateInput.ToMap(), UserID)
+	if err != nil {
+		logrus.Errorln("Update Password: ", err)
+		return
+	}
+
+	s.m.SendNewPassword(info["email"].(string), NewPassword)
 }

@@ -109,7 +109,7 @@ func (s *SellerStorage) SignIn(ctx context.Context, m map[string]interface{}) (i
 func (s *SellerStorage) GetInfo(ctx context.Context, UserID int) (map[string]interface{}, error) {
 	var user Seller
 
-	query, args, err := squirrel.Select("username", "seller_id", "seller_key").From(sellerTable).
+	query, args, err := squirrel.Select("username", "seller_id", "seller_key", "email").From(sellerTable).
 		Where(squirrel.Eq{"id": UserID}).PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
 		return nil, err
@@ -118,7 +118,7 @@ func (s *SellerStorage) GetInfo(ctx context.Context, UserID int) (map[string]int
 	row := s.c.QueryRow(ctx, query, args...)
 	err = row.Scan(&user.Username,
 		&user.SellerID,
-		&user.SellerKey)
+		&user.SellerKey, &user.Email)
 	if err != nil {
 		return nil, err
 	}

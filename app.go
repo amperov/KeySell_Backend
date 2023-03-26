@@ -22,6 +22,8 @@ import (
 	"KeySell/pkg/auth"
 	"KeySell/pkg/db"
 	"KeySell/pkg/digi"
+	"KeySell/pkg/gen"
+	"KeySell/pkg/mailer"
 	"KeySell/pkg/tooling"
 	"context"
 	"github.com/julienschmidt/httprouter"
@@ -94,7 +96,10 @@ func main() {
 	ProductHandler.Register(rtr)
 	HistoryHandler := history3.NewHistoryHandler(MiddleWare, HistoryService)
 	HistoryHandler.Register(rtr)
-	SellerHandler := seller3.NewSellerHandler(MiddleWare, SellerService)
+
+	Gen := new(gen.Gen)
+	Mailer := new(mailer.Mailer)
+	SellerHandler := seller3.NewSellerHandler(MiddleWare, SellerService, *Mailer, *Gen)
 	SellerHandler.Register(rtr)
 	ClientHandlers := client2.NewClientHandlers(ClientService)
 	ClientHandlers.Register(rtr)
