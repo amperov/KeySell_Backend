@@ -61,7 +61,7 @@ func (m *UpdateInput) ToMap() map[string]interface{} {
 		SellerMap["email"] = m.Email
 	}
 	if m.Password != "" {
-		SellerMap["password"] = m.Password
+		SellerMap["pass"] = m.Password
 	}
 	if m.SellerKey != "" {
 		SellerMap["seller_key"] = m.SellerKey
