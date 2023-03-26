@@ -19,7 +19,7 @@ func (m *Mailer) SendNewPassword(to string, password string) {
 	}
 	message := gomail.NewMessage()
 	message.SetHeaders(map[string][]string{
-		"From":    {message.FormatAddress("", "keys-store.online")},
+		"From":    {message.FormatAddress("alex.amperov@yandex.ru", "keys-store.online")},
 		"To":      {to},
 		"Subject": {"Новый пароль"}})
 
