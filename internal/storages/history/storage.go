@@ -82,7 +82,7 @@ func (h *HistoryStorage) GetOneTransaction(ctx context.Context, TransactID int) 
 		Select("category_name", "subcategory_name", "unique_code",
 			"client_email", "amount", "profit", "count",
 			"unique_inv", "date_delivery", "date_confirmed",
-			"content_key", "state", "amount_usd", "date_check").
+			"content_key", "state", "amount_usd", "date_check", "created_at").
 		From(table).Where(squirrel.Eq{"id": TransactID}).
 		PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {

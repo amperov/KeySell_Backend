@@ -107,7 +107,7 @@ func (h *ClientHandlers) PreCheck(w http.ResponseWriter, request *http.Request, 
 	log.Println(check)
 	if check == false {
 		w.WriteHeader(400)
-		w.Write([]byte(`"error": "У нас нет данного номинала в наличии, попробуйте выбрать другой или повторите попытку позже"`))
+		w.Write([]byte(`{"error": "У нас нет данного номинала в наличии, попробуйте выбрать другой или повторите попытку позже"}`))
 		log.Println(err)
 		return
 	}
