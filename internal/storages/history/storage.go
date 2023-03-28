@@ -25,6 +25,17 @@ func (h *HistoryStorage) EditTransaction(ctx context.Context, TransactID int, Ke
 	}
 	return nil
 }
+func (h *HistoryStorage) DeleteTransaction(ctx context.Context, TransactID int) error {
+	query, args, err := squirrel.Delete(table).Where(squirrel.Eq{"id": TransactID}).PlaceholderFormat(squirrel.Dollar).ToSql()
+	if err != nil {
+		return err
+	}
+	_, err = h.c.Exec(ctx, query, args...)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func NewHistoryStorage(c *pgxpool.Pool) *HistoryStorage {
 	return &HistoryStorage{c: c}

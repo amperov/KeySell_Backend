@@ -148,14 +148,18 @@ func (s *SellerHandler) RecoverPassword(w http.ResponseWriter, r *http.Request, 
 
 	UserID := r.Context().Value("user_id").(int)
 
-	NewPassword := s.g.Generate()
-
 	info, err := s.s.GetInfo(r.Context(), UserID)
 	if err != nil {
 		logrus.Errorln("Get Info: ", err)
 		return
 	}
 
+	if info["email"].(string) == "" {
+		w.Write([]byte(`{"error": "email не указан"}`))
+		return
+	}
+
+	NewPassword := s.g.Generate()
 	var UpdateInput UpdateInput
 	UpdateInput.Password = NewPassword
 

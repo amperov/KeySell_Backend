@@ -16,6 +16,7 @@ type HistoryService interface {
 	GetAllTransactions(ctx context.Context, UserID int) (map[string]interface{}, error)
 	GetOneTransaction(ctx context.Context, UserID, TransactID int) (map[string]interface{}, error)
 	EditTransaction(ctx context.Context, UserID, TransactID int, Key string) error
+	DeleteTransaction(ctx context.Context, UserID, TransactID int) error
 }
 
 type HistoryHandler struct {
@@ -31,6 +32,7 @@ func (h *HistoryHandler) Register(r *httprouter.Router) {
 	r.GET("/api/seller/history", h.ware.IsAuth(h.GetHistory))
 	r.GET("/api/seller/history/:tran_id", h.ware.IsAuth(h.GetFullTransaction))
 	r.PATCH("/api/seller/history/:tran_id", h.ware.IsAuth(h.EditTransaction))
+	r.DELETE("/api/seller/history/:tran_id", h.ware.IsAuth(h.DeleteTransaction))
 }
 
 func (h *HistoryHandler) GetHistory(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -111,6 +113,19 @@ func (h *HistoryHandler) EditTransaction(w http.ResponseWriter, r *http.Request,
 	err = h.hs.EditTransaction(r.Context(), UserID, tranID, input.ContentKey)
 	if err != nil {
 		logrus.Println(err)
+		w.Write([]byte(fmt.Sprintf(`{"error": "%v"}`, err)))
+		return
+	}
+
+}
+
+func (h *HistoryHandler) DeleteTransaction(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	UserID := r.Context().Value("user_id").(int)
+
+	tranID := tooling.GetTranID(params)
+
+	err := h.hs.DeleteTransaction(r.Context(), UserID, tranID)
+	if err != nil {
 		w.Write([]byte(fmt.Sprintf(`{"error": "%v"}`, err)))
 		return
 	}

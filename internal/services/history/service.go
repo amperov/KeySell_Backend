@@ -6,10 +6,15 @@ type HistoryStorage interface {
 	GetAllTransactions(ctx context.Context, UserID int) (map[string]interface{}, error)
 	GetOneTransaction(ctx context.Context, TransactID int) (map[string]interface{}, error)
 	EditTransaction(ctx context.Context, TransactID int, Key string) error
+	DeleteTransaction(ctx context.Context, TransactID int) error
 }
 
 type HistoryService struct {
 	HistoryStore HistoryStorage
+}
+
+func (h *HistoryService) DeleteTransaction(ctx context.Context, UserID, TransactID int) error {
+	return h.HistoryStore.DeleteTransaction(ctx, TransactID)
 }
 
 func NewHistoryService(historyStore HistoryStorage) *HistoryService {
