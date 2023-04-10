@@ -40,8 +40,6 @@ func (c *UpdateCategoryInput) ToMap() map[string]interface{} {
 	if c.Description != "" {
 		cat["description"] = c.Description
 	}
-	if c.Message != "" {
-		cat["message_client"] = c.Message
-	}
+	cat["message_client"] = c.Message
 	return cat
 }
