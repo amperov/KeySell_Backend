@@ -19,7 +19,7 @@ db-run:
 	-e POSTGRES_USER=$(DB_USER) \
 	-e POSTGRES_PASSWORD=$(DB_PASSWORD) \
 	-e POSTGRES_DB=$(DB_NAME) \
- 	-p $(DB_PORT):$(DB_PORT) -d --rm postgres:$(DB_VERSION)
+ 	-p $(DB_PORT):$(DB_PORT) -d postgres:$(DB_VERSION)
 
 migrate-up:
 	migrate -path ./migrations -database "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable" up
